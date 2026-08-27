@@ -23,7 +23,7 @@ class VentaController extends Controller
      */
     public function index(Request $request): View
     {
-        $ventas = Ventas::with(['usuario', 'cliente', 'detalles.producto'])
+        $ventas = Venta::with(['usuarios', 'clientes', 'detalles.productos'])
             ->orderBy('id_venta', 'desc')
             ->get();
 
