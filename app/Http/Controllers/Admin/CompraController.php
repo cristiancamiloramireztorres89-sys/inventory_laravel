@@ -100,6 +100,9 @@ class CompraController extends Controller
                 'subtotal'        => $subtotal,
             ]);
 
+        /**
+     * aumenta producto al producto.
+     */
             $producto = Producto::find($validated['id_producto']);
             $producto->increment('stock_actual', $validated['cantidad']);
         });

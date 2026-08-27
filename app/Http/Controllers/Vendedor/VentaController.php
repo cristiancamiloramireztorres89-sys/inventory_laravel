@@ -23,7 +23,7 @@ class VentaController extends Controller
      */
     public function index(Request $request): View
     {
-        $ventas = Venta::with(['cliente', 'detalles.producto'])
+        $ventas = Ventas::with(['cliente', 'detalles.producto'])
             ->where('id_usuario', Auth::id())
             ->orderBy('id_venta', 'desc')
             ->get();
@@ -148,6 +148,9 @@ class VentaController extends Controller
                     'subtotal'        => $item['subtotal'],
                 ]);
 
+            /**
+     * disminulle stock al registrar una venta.
+     */
                 $item['producto']->decrement('stock_actual', $item['cantidad']);
             }
 
