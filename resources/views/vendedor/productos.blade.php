@@ -11,12 +11,15 @@
     {{-- Encabezado con buscador y filtro de categoría --}}
     <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div>
-            <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                <span>Catálogo de Mostrador</span>
-                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700" id="contadorProductos">
-                    {{ $productos->count() }} artículos
-                </span>
-            </h3>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-boxes text-xl text-indigo-600"></i>
+                <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                    <span>Catálogo de Mostrador</span>
+                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700" id="contadorProductos">
+                        {{ $productos->count() }} artículos
+                    </span>
+                </h3>
+            </div>
             <p class="text-xs text-slate-500 mt-0.5">Precios vigentes y existencias en tiempo real</p>
         </div>
 
@@ -79,20 +82,20 @@
                     <div>
                         {{-- Fila de Insignias: Categoría y Estado de Stock --}}
                         <div class="flex items-center justify-between gap-2 mb-2">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 truncate max-w-[140px]">
-                                {{ $producto->categoria->nombre ?? 'General' }}
+                            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate max-w-[140px] flex items-center gap-1">
+                                <i class="bi bi-tag text-slate-400"></i> {{ $producto->categoria->nombre ?? 'General' }}
                             </span>
                             @if($producto->stock_actual <= 0)
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200 flex-shrink-0">
-                                    Agotado
+                                <span class="text-[11px] font-bold text-rose-600 flex items-center gap-1 flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Agotado
                                 </span>
                             @elseif($producto->stock_actual <= $producto->stock_minimo)
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 flex-shrink-0">
-                                    Stock Bajo ({{ $producto->stock_actual }})
+                                <span class="text-[11px] font-bold text-amber-600 flex items-center gap-1 flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Stock Bajo ({{ $producto->stock_actual }})
                                 </span>
                             @else
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex-shrink-0">
-                                    {{ $producto->stock_actual }} disp.
+                                <span class="text-[11px] font-bold text-emerald-600 flex items-center gap-1 flex-shrink-0">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {{ $producto->stock_actual }} disp.
                                 </span>
                             @endif
                         </div>

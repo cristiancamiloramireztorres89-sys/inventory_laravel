@@ -11,8 +11,11 @@
     {{-- Encabezado con Botón Nueva Compra --}}
     <div class="flex items-center justify-between">
         <div>
-            <h3 class="text-lg font-extrabold text-slate-900">Mis Compras Registradas</h3>
-            <p class="text-xs text-slate-500">Historial de órdenes de abastecimiento a proveedores</p>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-box-arrow-in-down text-xl text-amber-600"></i>
+                <h3 class="text-lg font-extrabold text-slate-900">Mis Compras Registradas</h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Historial de órdenes de abastecimiento a proveedores</p>
         </div>
 
         <button type="button" onclick="abrirModalCrearCompraVendedor()"
@@ -28,9 +31,7 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tus Compras Registradas</p>
                 <h3 class="text-2xl font-black text-slate-900 mt-1">{{ $totalCompras }}</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
-                <i class="bi bi-box-arrow-in-down"></i>
-            </div>
+            <i class="bi bi-box-arrow-in-down text-2xl text-amber-600"></i>
         </div>
 
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-center justify-between">
@@ -38,9 +39,7 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Invertido por Ti</p>
                 <h3 class="text-2xl font-black text-slate-900 mt-1">${{ number_format($totalInvertido, 2) }}</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
-                <i class="bi bi-wallet2"></i>
-            </div>
+            <i class="bi bi-wallet2 text-2xl text-indigo-600"></i>
         </div>
     </div>
 
@@ -59,10 +58,6 @@
                     onkeyup="filtrarCompras()"
                 >
             </div>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200">
-                <i class="bi bi-lock-fill text-[10px]"></i>
-                Filtrado por tu usuario ({{ auth()->user()->nombre }})
-            </span>
         </div>
 
         <div class="overflow-x-auto">
@@ -136,9 +131,7 @@
 <div id="modalEliminarCompraVendedor" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-lg flex-shrink-0">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-            </div>
+            <i class="bi bi-exclamation-triangle-fill text-2xl text-rose-600 flex-shrink-0"></i>
             <div>
                 <h3 class="font-bold text-slate-900 text-base">¿Eliminar Compra #<span id="vendedor_eliminar_id_compra_txt"></span>?</h3>
                 <p class="text-xs text-slate-500 mt-0.5">Esta acción descontará las existencias que habían ingresado en el inventario.</p>
@@ -172,9 +165,7 @@
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-lg w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-amber-600 text-white flex items-center justify-center text-sm">
-                    <i class="bi bi-box-arrow-in-down"></i>
-                </div>
+                <i class="bi bi-box-arrow-in-down text-xl text-slate-800"></i>
                 <h3 class="font-bold text-slate-900 text-base">Registrar Compra</h3>
             </div>
             <button type="button" onclick="cerrarModalCrearCompraVendedor()" class="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">

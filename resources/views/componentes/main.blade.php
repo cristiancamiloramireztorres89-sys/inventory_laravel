@@ -99,7 +99,49 @@
             dismissElement('flash-error-alert', 3000);
             dismissElement('flash-validation-errors', 3500);
         });
+
+        function abrirModalLogout() {
+            const m = document.getElementById('modalConfirmarLogout');
+            if (m) m.classList.remove('hidden');
+        }
+        function cerrarModalLogout() {
+            const m = document.getElementById('modalConfirmarLogout');
+            if (m) m.classList.add('hidden');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') cerrarModalLogout();
+        });
     </script>
+
+    {{-- Modal de Confirmación para Cerrar Sesión --}}
+    <div id="modalConfirmarLogout" onclick="if(event.target === this) cerrarModalLogout()"
+         class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 text-center">
+            
+            <div class="flex items-center justify-center text-3xl mx-auto text-rose-500 mb-1">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+
+            <div class="space-y-1.5">
+                <h3 class="font-bold text-slate-900 text-base">¿Cerrar Sesión?</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    ¿Estás seguro de que deseas salir del sistema? Deberás ingresar tus credenciales nuevamente para acceder.
+                </p>
+            </div>
+
+            <form id="formGlobalLogout" action="{{ route('logout') }}" method="POST" class="pt-2 flex items-center gap-2">
+                @csrf
+                <button type="button" onclick="cerrarModalLogout()"
+                        class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold cursor-pointer transition-colors">
+                    Cancelar
+                </button>
+                <button type="submit"
+                        class="w-1/2 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-sm cursor-pointer transition-colors">
+                    Sí, Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>

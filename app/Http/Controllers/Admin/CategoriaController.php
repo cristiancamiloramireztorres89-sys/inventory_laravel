@@ -28,12 +28,32 @@ class CategoriaController extends Controller
         $validated = $request->validate([
             'nombre'      => ['required', 'string', 'max:100', 'unique:categorias,nombre'],
             'descripcion' => ['nullable', 'string', 'max:255'],
+            'imagen'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
         ], [
             'nombre.required' => 'El nombre de la categoría es obligatorio.',
             'nombre.unique'   => 'Ya existe una categoría con este nombre.',
+            'imagen.image'    => 'El archivo seleccionado debe ser una imagen válida.',
+            'imagen.mimes'    => 'Formatos de imagen permitidos: JPG, JPEG, PNG, WEBP, GIF.',
+            'imagen.max'      => 'La imagen no debe superar los 2MB.',
         ]);
 
-        Categoria::create($validated);
+        $nombreImagen = null;
+        if ($request->hasFile('imagen')) {
+            $destino = public_path('uploads/categorias');
+            if (! file_exists($destino)) {
+                mkdir($destino, 0755, true);
+            }
+
+            $file = $request->file('imagen');
+            $nombreImagen = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destino, $nombreImagen);
+        }
+
+        Categoria::create([
+            'nombre'      => $validated['nombre'],
+            'descripcion' => $validated['descripcion'] ?? null,
+            'imagen'      => $nombreImagen,
+        ]);
 
         return redirect()->route('admin.categorias')
             ->with('success', 'Categoría creada correctamente.');
@@ -47,12 +67,37 @@ class CategoriaController extends Controller
         $validated = $request->validate([
             'nombre'      => ['required', 'string', 'max:100', 'unique:categorias,nombre,' . $categoria->id_categoria . ',id_categoria'],
             'descripcion' => ['nullable', 'string', 'max:255'],
+            'imagen'      => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
         ], [
             'nombre.required' => 'El nombre de la categoría es obligatorio.',
             'nombre.unique'   => 'Ya existe otra categoría con este nombre.',
+            'imagen.image'    => 'El archivo seleccionado debe ser una imagen válida.',
+            'imagen.mimes'    => 'Formatos de imagen permitidos: JPG, JPEG, PNG, WEBP, GIF.',
+            'imagen.max'      => 'La imagen no debe superar los 2MB.',
         ]);
 
-        $categoria->update($validated);
+        $data = [
+            'nombre'      => $validated['nombre'],
+            'descripcion' => $validated['descripcion'] ?? null,
+        ];
+
+        if ($request->hasFile('imagen')) {
+            $destino = public_path('uploads/categorias');
+            if (! file_exists($destino)) {
+                mkdir($destino, 0755, true);
+            }
+
+            if ($categoria->imagen && file_exists($destino . '/' . $categoria->imagen)) {
+                @unlink($destino . '/' . $categoria->imagen);
+            }
+
+            $file = $request->file('imagen');
+            $nombreImagen = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destino, $nombreImagen);
+            $data['imagen'] = $nombreImagen;
+        }
+
+        $categoria->update($data);
 
         return redirect()->route('admin.categorias')
             ->with('success', 'Categoría actualizada correctamente.');
@@ -66,6 +111,10 @@ class CategoriaController extends Controller
         if ($categoria->productos()->exists()) {
             return redirect()->route('admin.categorias')
                 ->with('error', 'No se puede eliminar la categoría porque contiene productos asociados.');
+        }
+
+        if ($categoria->imagen && file_exists(public_path('uploads/categorias/' . $categoria->imagen))) {
+            @unlink(public_path('uploads/categorias/' . $categoria->imagen));
         }
 
         $categoria->delete();

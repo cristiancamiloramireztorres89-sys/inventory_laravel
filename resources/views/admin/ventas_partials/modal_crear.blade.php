@@ -6,9 +6,7 @@
         {{-- HEADER FIJO --}}
         <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-100 flex-shrink-0 bg-white">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-sm shadow-sm">
-                    <i class="bi bi-cart-check-fill"></i>
-                </div>
+                <i class="bi bi-cart-check-fill text-xl text-slate-800"></i>
                 <div>
                     <h3 class="font-bold text-slate-900 text-sm sm:text-base leading-tight">Registrar Nueva Venta</h3>
                     <p class="text-[11px] text-slate-400">Punto de Venta Directo</p>

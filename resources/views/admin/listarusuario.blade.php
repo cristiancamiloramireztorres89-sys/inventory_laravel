@@ -11,9 +11,7 @@
     {{-- Barra superior: total + botón agregar --}}
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center">
-                <i class="bi bi-people-fill text-base"></i>
-            </div>
+            <i class="bi bi-people-fill text-2xl text-indigo-600"></i>
             <div>
                 <p class="text-sm font-bold text-slate-900">{{ $usuarios->count() }} usuarios registrados</p>
                 <p class="text-xs text-slate-500">Administradores y vendedores del sistema</p>
@@ -71,9 +69,15 @@
                             {{-- Nombre + avatar --}}
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full {{ $usuario->activo ? 'bg-slate-900' : 'bg-slate-400' }} text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                                        {{ strtoupper(substr($usuario->nombre, 0, 1)) }}
-                                    </div>
+                                    @if($usuario->foto_url)
+                                        <img src="{{ $usuario->foto_url }}"
+                                             alt="{{ $usuario->nombre }}"
+                                             class="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-2xs flex-shrink-0">
+                                    @else
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-bold text-slate-600 flex-shrink-0">
+                                            {{ strtoupper(substr($usuario->nombre ?? 'U', 0, 1)) }}
+                                        </div>
+                                    @endif
                                     <span class="text-sm font-semibold text-slate-900">{{ $usuario->nombre }}</span>
                                 </div>
                             </td>
@@ -86,38 +90,27 @@
                             {{-- Rol --}}
                             <td class="px-6 py-4">
                                 @php $rol = strtolower($usuario->rol->nombre ?? 'sin rol'); @endphp
-                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold
-                                    {{ $rol === 'administrador'
-                                        ? 'bg-slate-900 text-white'
-                                        : 'bg-slate-100 text-slate-700 border border-slate-200' }}">
-                                    <i class="bi {{ $rol === 'administrador' ? 'bi-shield-check' : 'bi-bag-check' }} text-[10px]"></i>
+                                <span class="inline-flex items-center gap-1.5 text-xs font-semibold {{ $rol === 'administrador' ? 'text-slate-900 font-bold' : 'text-slate-600' }}">
+                                    <i class="bi {{ $rol === 'administrador' ? 'bi-shield-check text-blue-600' : 'bi-bag-check text-slate-400' }} text-xs"></i>
                                     {{ ucfirst($rol) }}
                                 </span>
                             </td>
 
                             {{-- Estado Activo / Inactivo --}}
                             <td class="px-6 py-4">
-                                @if($usuario->activo)
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                        Activo
-                                    </span>
-                                @else
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                        Inactivo
-                                    </span>
-                                @endif
+                                <span class="text-xs font-semibold {{ $usuario->activo ? 'text-emerald-700' : 'text-amber-700' }}">
+                                    {{ $usuario->activo ? 'Activo' : 'Inactivo' }}
+                                </span>
                             </td>
 
                             {{-- Acciones --}}
                             <td class="px-6 py-4">
-                                <div class="flex items-center justify-end gap-2">
+                                <div class="flex items-center justify-end gap-1">
                                     {{-- Botón Editar --}}
                                     <button type="button" title="Editar usuario"
-                                        onclick="abrirModalEditar({{ $usuario->id_usuario }}, '{{ addslashes($usuario->nombre) }}', '{{ addslashes($usuario->correo) }}', {{ $usuario->id_rol }})"
-                                        class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer">
-                                        <i class="bi bi-pencil text-xs"></i>
+                                        onclick="abrirModalEditar({{ $usuario->id_usuario }}, '{{ addslashes($usuario->nombre) }}', '{{ addslashes($usuario->correo) }}', {{ $usuario->id_rol }}, '{{ $usuario->foto_url ?? '' }}')"
+                                        class="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer text-sm">
+                                        <i class="bi bi-pencil"></i>
                                     </button>
 
                                     {{-- Botón Desactivar / Activar --}}
@@ -125,14 +118,14 @@
                                         @if($usuario->activo)
                                             <button type="button" title="Desactivar usuario"
                                                 onclick="abrirModalToggle({{ $usuario->id_usuario }}, '{{ addslashes($usuario->nombre) }}', true)"
-                                                class="w-8 h-8 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-600 flex items-center justify-center transition-colors cursor-pointer">
-                                                <i class="bi bi-person-slash text-xs"></i>
+                                                class="p-2 text-amber-500 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer text-sm">
+                                                <i class="bi bi-person-slash"></i>
                                             </button>
                                         @else
                                             <button type="button" title="Activar usuario"
                                                 onclick="abrirModalToggle({{ $usuario->id_usuario }}, '{{ addslashes($usuario->nombre) }}', false)"
-                                                class="w-8 h-8 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-600 flex items-center justify-center transition-colors cursor-pointer">
-                                                <i class="bi bi-person-check text-xs"></i>
+                                                class="p-2 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer text-sm">
+                                                <i class="bi bi-person-check"></i>
                                             </button>
                                         @endif
 
@@ -143,8 +136,8 @@
                                         <button type="button"
                                             title="{{ $tieneHistorial ? 'No se puede eliminar: tiene ' . $usuario->ventas_count . ' venta(s) y ' . $usuario->compras_count . ' compra(s) registradas' : 'Eliminar usuario permanentemente' }}"
                                             onclick="abrirModalEliminar({{ $usuario->id_usuario }}, '{{ addslashes($usuario->nombre) }}', {{ $usuario->ventas_count }}, {{ $usuario->compras_count }})"
-                                            class="w-8 h-8 rounded-lg {{ $tieneHistorial ? 'bg-slate-100 border-slate-200 text-slate-400 opacity-60 cursor-pointer' : 'bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 cursor-pointer' }} flex items-center justify-center transition-colors">
-                                            <i class="bi bi-trash text-xs"></i>
+                                            class="p-2 {{ $tieneHistorial ? 'text-slate-300 opacity-60 cursor-not-allowed' : 'text-rose-500 hover:text-rose-700 hover:bg-rose-50 cursor-pointer' }} rounded-lg transition-colors text-sm">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     @endif
                                 </div>
@@ -174,14 +167,12 @@
             <p class="text-xs text-slate-400">
                 Mostrando <span class="font-semibold text-slate-600">{{ $usuarios->count() }}</span> usuario(s)
             </p>
-            <div class="flex items-center gap-3 text-xs text-slate-500">
-                <span class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+            <div class="flex items-center gap-3 text-xs text-slate-500 font-medium">
+                <span class="text-emerald-700 font-semibold">
                     {{ $usuarios->where('activo', true)->count() }} activo(s)
                 </span>
                 <span class="text-slate-300">|</span>
-                <span class="flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+                <span class="text-amber-700 font-semibold">
                     {{ $usuarios->where('activo', false)->count() }} inactivo(s)
                 </span>
             </div>
@@ -198,9 +189,7 @@
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center text-sm">
-                    <i class="bi bi-person-plus-fill"></i>
-                </div>
+                <i class="bi bi-person-plus text-xl text-slate-800"></i>
                 <h3 class="font-bold text-slate-900 text-base">Agregar Nuevo Usuario</h3>
             </div>
             <button type="button" onclick="cerrarModalCrear()" class="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">
@@ -208,8 +197,22 @@
             </button>
         </div>
 
-        <form action="{{ route('admin.usuarios.store') }}" method="POST" class="space-y-4" autocomplete="off">
+        <form action="{{ route('admin.usuarios.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
             @csrf
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Foto de Perfil (Opcional)</label>
+                <div class="flex items-center gap-3">
+                    <div id="create_avatar_box" class="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-slate-400">
+                        <i class="bi bi-person text-xl" id="create_avatar_icon"></i>
+                        <img id="create_avatar_img" class="w-full h-full object-cover hidden" alt="Avatar Preview">
+                    </div>
+                    <div class="flex-1">
+                        <input type="file" name="foto" id="create_foto" accept="image/*" onchange="previewUserAvatar(this, 'create_avatar_img', 'create_avatar_icon')"
+                            class="w-full text-xs text-slate-500 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
+                    </div>
+                </div>
+            </div>
 
             <div class="space-y-1">
                 <label for="create_nombre" class="block text-xs font-bold text-slate-700">Nombre Completo</label>
@@ -268,9 +271,7 @@
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-sm">
-                    <i class="bi bi-pencil-square"></i>
-                </div>
+                <i class="bi bi-pencil-square text-xl text-slate-800"></i>
                 <h3 class="font-bold text-slate-900 text-base">Editar Usuario</h3>
             </div>
             <button type="button" onclick="cerrarModalEditar()" class="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">
@@ -278,9 +279,24 @@
             </button>
         </div>
 
-        <form id="formEditar" method="POST" class="space-y-4" autocomplete="off">
+        <form id="formEditar" method="POST" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
             @csrf
             @method('PUT')
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Foto de Perfil (Opcional)</label>
+                <div class="flex items-center gap-3">
+                    <div id="edit_avatar_box" class="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-slate-400">
+                        <i class="bi bi-person text-xl" id="edit_avatar_icon"></i>
+                        <img id="edit_avatar_img" class="w-full h-full object-cover hidden" alt="Avatar Preview">
+                    </div>
+                    <div class="flex-1">
+                        <input type="file" name="foto" id="edit_foto" accept="image/*" onchange="previewUserAvatar(this, 'edit_avatar_img', 'edit_avatar_icon')"
+                            class="w-full text-xs text-slate-500 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
+                        <p class="text-[10px] text-slate-400 mt-0.5">Selecciona una imagen solo si deseas cambiarla.</p>
+                    </div>
+                </div>
+            </div>
 
             <div class="space-y-1">
                 <label for="edit_nombre" class="block text-xs font-bold text-slate-700">Nombre Completo</label>
@@ -336,7 +352,7 @@
 {{-- ========================================================================= --}}
 <div id="modalToggle" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-        <div id="toggle_icon_container" class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mx-auto">
+        <div id="toggle_icon_container" class="flex items-center justify-center text-3xl mx-auto mb-1">
             <i id="toggle_icon" class="bi"></i>
         </div>
 
@@ -364,7 +380,7 @@
 {{-- ========================================================================= --}}
 <div id="modalEliminar" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-        <div id="eliminar_icon_container" class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mx-auto">
+        <div id="eliminar_icon_container" class="flex items-center justify-center text-3xl mx-auto text-rose-500 mb-1">
             <i id="eliminar_icon" class="bi bi-trash3-fill"></i>
         </div>
 
@@ -408,6 +424,20 @@
         });
     }
 
+    function previewUserAvatar(input, imgId, iconId) {
+        const img = document.getElementById(imgId);
+        const icon = document.getElementById(iconId);
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                icon.classList.add('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     // Modal Crear
     function abrirModalCrear() {
         const nombre = document.getElementById('create_nombre');
@@ -415,6 +445,9 @@
         const rol = document.getElementById('create_id_rol');
         const pass = document.getElementById('create_contrasena');
         const eye = document.getElementById('eye_create');
+        const foto = document.getElementById('create_foto');
+        const avatarImg = document.getElementById('create_avatar_img');
+        const avatarIcon = document.getElementById('create_avatar_icon');
 
         if (nombre) nombre.value = '';
         if (correo) correo.value = '';
@@ -424,6 +457,12 @@
             pass.type = 'password';
         }
         if (eye) eye.className = 'bi bi-eye text-sm';
+        if (foto) foto.value = '';
+        if (avatarImg) {
+            avatarImg.src = '';
+            avatarImg.classList.add('hidden');
+        }
+        if (avatarIcon) avatarIcon.classList.remove('hidden');
 
         document.getElementById('modalCrear').classList.remove('hidden');
     }
@@ -432,13 +471,29 @@
     }
 
     // Modal Editar
-    function abrirModalEditar(id, nombre, correo, idRol) {
+    function abrirModalEditar(id, nombre, correo, idRol, fotoUrl) {
         const form = document.getElementById('formEditar');
         form.action = `/admin/usuarios/${id}`;
         document.getElementById('edit_nombre').value = nombre;
         document.getElementById('edit_correo').value = correo;
         document.getElementById('edit_id_rol').value = idRol;
         document.getElementById('edit_contrasena').value = '';
+
+        const editFoto = document.getElementById('edit_foto');
+        if (editFoto) editFoto.value = '';
+
+        const editImg = document.getElementById('edit_avatar_img');
+        const editIcon = document.getElementById('edit_avatar_icon');
+        if (fotoUrl) {
+            editImg.src = fotoUrl;
+            editImg.classList.remove('hidden');
+            editIcon.classList.add('hidden');
+        } else {
+            editImg.src = '';
+            editImg.classList.add('hidden');
+            editIcon.classList.remove('hidden');
+        }
+
         document.getElementById('modalEditar').classList.remove('hidden');
     }
     function cerrarModalEditar() {
@@ -458,7 +513,7 @@
 
         if (esActivoActualmente) {
             // Desactivar
-            iconContainer.className = "w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mx-auto";
+            iconContainer.className = "flex items-center justify-center text-3xl mx-auto text-amber-500 mb-1";
             icon.className = "bi bi-person-slash";
             titulo.textContent = "¿Desactivar Usuario?";
             descripcion.innerHTML = `Estás a punto de desactivar a <strong class="text-slate-800">${nombre}</strong>. El usuario no podrá iniciar sesión hasta que lo reactives.`;
@@ -466,7 +521,7 @@
             btn.textContent = "Sí, Desactivar";
         } else {
             // Activar
-            iconContainer.className = "w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto";
+            iconContainer.className = "flex items-center justify-center text-3xl mx-auto text-emerald-600 mb-1";
             icon.className = "bi bi-person-check-fill";
             titulo.textContent = "¿Activar Usuario?";
             descripcion.innerHTML = `Estás a punto de reactivar la cuenta de <strong class="text-slate-800">${nombre}</strong> para que pueda ingresar al sistema.`;
@@ -498,7 +553,7 @@
             if (totalCompras > 0) motivos.push(`<strong>${totalCompras} compra(s)</strong>`);
             const detalle = motivos.join(' y ');
 
-            iconContainer.className = "w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mx-auto";
+            iconContainer.className = "flex items-center justify-center text-3xl mx-auto text-amber-500 mb-1";
             icon.className = "bi bi-shield-exclamation";
             titulo.textContent = "No se puede eliminar este usuario";
             descripcion.innerHTML = `El usuario <strong class="text-slate-800">${nombre}</strong> tiene ${detalle} registradas en el historial. Por seguridad contable no es posible eliminarlo, pero puedes <strong class="text-slate-800">desactivar su cuenta</strong> para que no pueda ingresar.`;
@@ -507,7 +562,7 @@
             btnBloqueado.classList.remove('hidden');
         } else {
             // Permitido eliminar
-            iconContainer.className = "w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mx-auto";
+            iconContainer.className = "flex items-center justify-center text-3xl mx-auto text-rose-500 mb-1";
             icon.className = "bi bi-trash3-fill";
             titulo.textContent = "¿Eliminar Usuario?";
             descripcion.innerHTML = `¿Estás seguro de eliminar a <strong class="text-slate-800">${nombre}</strong>? Esta acción es definitiva y removerá la cuenta del sistema.`;

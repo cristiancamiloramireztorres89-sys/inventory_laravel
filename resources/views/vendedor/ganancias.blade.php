@@ -9,14 +9,12 @@
 <div class="space-y-6">
 
     {{-- Encabezado con Métricas y Filtros --}}
-    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
+    <div>
+        <div class="flex items-center gap-2.5">
+            <i class="bi bi-graph-up-arrow text-xl text-indigo-600"></i>
             <h3 class="text-lg font-extrabold text-slate-900">Rendimiento de Tus Ventas</h3>
-            <p class="text-xs text-slate-500">Márgenes y utilidad neta calculada sobre tus transacciones personales</p>
         </div>
-        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow-sm">
-            <i class="bi bi-person-check text-emerald-400"></i> Ventas de {{ auth()->user()->nombre }}
-        </span>
+        <p class="text-xs text-slate-500 mt-0.5">Márgenes y utilidad neta calculada sobre tus transacciones personales</p>
     </div>
 
     {{-- Tarjetas Resumen de Ganancias del Vendedor --}}
@@ -31,9 +29,7 @@
                     <i class="bi bi-arrow-up-right"></i> Cobrado en tus ventas
                 </p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl shadow-inner">
-                <i class="bi bi-cash-stack"></i>
-            </div>
+            <i class="bi bi-cash-stack text-3xl text-blue-600"></i>
         </div>
 
         {{-- Costo de Mercancía --}}
@@ -45,9 +41,7 @@
                     <i class="bi bi-arrow-down-left"></i> Costo a proveedores
                 </p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shadow-inner">
-                <i class="bi bi-cart-check-fill"></i>
-            </div>
+            <i class="bi bi-cart-check-fill text-3xl text-amber-600"></i>
         </div>
 
         {{-- Tu Ganancia Neta Total --}}
@@ -61,9 +55,7 @@
                     <i class="bi bi-check2-circle"></i> {{ $gananciaTotal >= 0 ? 'Dinero libre que ganaste' : 'Pérdida en el período' }}
                 </p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shadow-inner">
-                <i class="bi bi-piggy-bank-fill"></i>
-            </div>
+            <i class="bi bi-piggy-bank-fill text-3xl text-emerald-600"></i>
         </div>
 
         {{-- Margen de Rendimiento --}}
@@ -77,9 +69,7 @@
                     <i class="bi bi-graph-up"></i> Retorno sobre el costo
                 </p>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-inner">
-                <i class="bi bi-percent"></i>
-            </div>
+            <i class="bi bi-percent text-3xl text-indigo-600"></i>
         </div>
 
     </div>
@@ -220,14 +210,14 @@
 
                             {{-- Ganancia Total Venta --}}
                             <td class="px-5 py-4 text-right">
-                                <span class="inline-block px-3 py-1.5 rounded-xl font-black text-xs {{ $gananciaVenta >= 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200' }}">
+                                <span class="font-black text-sm {{ $gananciaVenta >= 0 ? 'text-emerald-600' : 'text-rose-600' }}">
                                     {{ $gananciaVenta >= 0 ? '+$' . number_format($gananciaVenta, 2) : '-$' . number_format(abs($gananciaVenta), 2) }}
                                 </span>
                             </td>
 
                             {{-- Margen --}}
                             <td class="px-5 py-4 text-center">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-black {{ $margenVenta >= 30 ? 'bg-emerald-100 text-emerald-800' : ($margenVenta > 0 ? 'bg-blue-100 text-blue-800' : 'bg-rose-100 text-rose-800') }}">
+                                <span class="font-black text-xs {{ $margenVenta >= 30 ? 'text-emerald-600' : ($margenVenta > 0 ? 'text-blue-600' : 'text-rose-600') }}">
                                     {{ $margenVenta >= 0 ? '+' . $margenVenta . '%' : $margenVenta . '%' }}
                                 </span>
                             </td>

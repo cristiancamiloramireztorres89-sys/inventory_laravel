@@ -43,9 +43,7 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition-all">
             <div class="flex items-center justify-between">
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Ingresos Totales (Ventas)</p>
-                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
-                    <i class="bi bi-cash-stack"></i>
-                </div>
+                <i class="bi bi-cash-stack text-2xl text-blue-600"></i>
             </div>
             <h3 class="text-2xl font-black text-slate-900 mt-2">${{ number_format($totalRecaudado, 2) }}</h3>
             <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-100 font-medium">
@@ -58,9 +56,7 @@
         <div class="bg-white border border-emerald-200/80 rounded-2xl p-5 shadow-sm bg-gradient-to-br from-white via-emerald-50/20 to-emerald-50/40 hover:border-emerald-300 transition-all">
             <div class="flex items-center justify-between">
                 <p class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Ganancia Neta (Utilidad)</p>
-                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg shadow-inner">
-                    <i class="bi bi-wallet2"></i>
-                </div>
+                <i class="bi bi-wallet2 text-2xl text-emerald-600"></i>
             </div>
             <h3 class="text-2xl font-black {{ $gananciaTotal >= 0 ? 'text-emerald-600' : 'text-rose-600' }} mt-2">
                 {{ $gananciaTotal >= 0 ? '+$' . number_format($gananciaTotal, 2) : '-$' . number_format(abs($gananciaTotal), 2) }}
@@ -75,9 +71,7 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition-all">
             <div class="flex items-center justify-between">
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Inversión a Proveedores</p>
-                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-                    <i class="bi bi-cart-check-fill"></i>
-                </div>
+                <i class="bi bi-cart-check-fill text-2xl text-amber-600"></i>
             </div>
             <h3 class="text-2xl font-black text-slate-900 mt-2">${{ number_format($totalInvertido, 2) }}</h3>
             <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-100 font-medium">
@@ -90,9 +84,7 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition-all">
             <div class="flex items-center justify-between">
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Stock Total en Almacén</p>
-                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
-                    <i class="bi bi-boxes"></i>
-                </div>
+                <i class="bi bi-boxes text-2xl text-purple-600"></i>
             </div>
             <h3 class="text-2xl font-black text-slate-900 mt-2">{{ number_format($totalStockUnidades) }} <span class="text-xs font-normal text-slate-400">unidades</span></h3>
             <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-100 font-medium">
@@ -114,9 +106,7 @@
         <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
             <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
-                        <i class="bi bi-receipt"></i>
-                    </div>
+                    <i class="bi bi-receipt text-xl text-emerald-600 flex-shrink-0"></i>
                     <div>
                         <h4 class="font-extrabold text-slate-900 text-sm">Últimas Ventas Realizadas</h4>
                         <p class="text-[11px] text-slate-500">Transacciones comerciales más recientes</p>
@@ -176,12 +166,10 @@
             <div>
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                     <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                        </div>
+                        <i class="bi bi-exclamation-triangle-fill text-xl text-rose-600 flex-shrink-0"></i>
                         <h4 class="font-extrabold text-slate-900 text-sm">Control de Stock Crítico</h4>
                     </div>
-                    <span class="px-2 py-0.5 rounded-full {{ $stockBajoCount > 0 ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700' }} text-[10px] font-bold">
+                    <span class="text-xs font-bold {{ $stockBajoCount > 0 ? 'text-rose-600' : 'text-emerald-600' }}">
                         {{ $stockBajoCount }} por reponer
                     </span>
                 </div>
@@ -191,7 +179,7 @@
                         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5">
                             <div class="flex items-center justify-between">
                                 <p class="font-bold text-xs text-slate-900 truncate" title="{{ $psb->nombre }}">{{ $psb->nombre }}</p>
-                                <span class="px-2 py-0.5 rounded-md bg-rose-100 text-rose-800 text-[10px] font-black">
+                                <span class="text-xs font-bold text-rose-600">
                                     {{ $psb->stock_actual }} unid.
                                 </span>
                             </div>
@@ -228,9 +216,7 @@
         <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-sm">
-                        <i class="bi bi-trophy-fill"></i>
-                    </div>
+                    <i class="bi bi-trophy-fill text-xl text-amber-500 flex-shrink-0"></i>
                     <div>
                         <h4 class="font-extrabold text-slate-900 text-sm">Top Productos Más Rentables</h4>
                         <p class="text-[11px] text-slate-500">Artículos que más ganancia neta generan</p>
@@ -267,9 +253,7 @@
         <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-sm">
-                        <i class="bi bi-box-arrow-in-down"></i>
-                    </div>
+                    <i class="bi bi-box-arrow-in-down text-xl text-indigo-600 flex-shrink-0"></i>
                     <div>
                         <h4 class="font-extrabold text-slate-900 text-sm">Últimos Abastecimientos</h4>
                         <p class="text-[11px] text-slate-500">Órdenes de compra registradas a proveedores</p>

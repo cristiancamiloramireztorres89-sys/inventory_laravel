@@ -8,83 +8,133 @@
 
 <div class="space-y-6">
 
-    {{-- Encabezado --}}
-    <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center">
-                <i class="bi bi-tags-fill text-lg"></i>
+    {{-- Barra Superior: Resumen, Buscador y Botón Crear --}}
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <div class="flex items-center gap-2">
+                <i class="bi bi-tags-fill text-xl text-emerald-600"></i>
+                <h3 class="text-sm font-bold text-slate-900" id="contadorCategorias">{{ $categorias->count() }} Categorías Registradas</h3>
             </div>
-            <div>
-                <p class="text-sm font-bold text-slate-900">{{ $categorias->count() }} Categorías Registradas</p>
-                <p class="text-xs text-slate-500">Estructura de catálogo</p>
-            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Estructura y clasificación del catálogo de inventario</p>
         </div>
 
-        <button type="button" onclick="abrirModalCrearCat()"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer">
-            <i class="bi bi-plus-lg"></i> Nueva Categoría
-        </button>
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            {{-- Buscador de Categorías --}}
+            <div class="relative flex-1 sm:w-64 md:w-72">
+                <i class="bi bi-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                <input
+                    type="text"
+                    id="buscadorCategorias"
+                    placeholder="Buscar por categoría o descripción..."
+                    class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:bg-white transition-all shadow-sm"
+                    onkeyup="aplicarFiltroCategorias()"
+                >
+            </div>
+
+            {{-- Botón Nueva Categoría --}}
+            <button type="button" onclick="abrirModalCrearCat()"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer flex-shrink-0">
+                <i class="bi bi-plus-lg"></i> Nueva Categoría
+            </button>
+        </div>
     </div>
 
-    {{-- Tabla de Categorías --}}
-    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+    {{-- Cuadrícula de Categorías (Cards / Cuadros estilo Productos) --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="gridCategorias">
+        @forelse ($categorias as $categoria)
+            @php
+                $catImgUrl = ($categoria->imagen && file_exists(public_path('uploads/categorias/' . $categoria->imagen)))
+                    ? asset('uploads/categorias/' . $categoria->imagen)
+                    : '';
+            @endphp
+            <div class="card-categoria group bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden"
+                 data-nombre="{{ strtolower($categoria->nombre) }}"
+                 data-descripcion="{{ strtolower($categoria->descripcion ?? '') }}">
 
-        <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead>
-                    <tr class="border-b border-slate-100 bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                        <th class="text-left px-6 py-3.5"># ID</th>
-                        <th class="text-left px-6 py-3.5">Nombre de Categoría</th>
-                        <th class="text-left px-6 py-3.5">Descripción</th>
-                        <th class="text-center px-6 py-3.5">Productos Vinculados</th>
-                        <th class="text-right px-6 py-3.5">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 text-xs">
-                    @forelse ($categorias as $categoria)
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4 font-bold text-slate-900">
-                                #{{ $categoria->id_categoria }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="font-bold text-slate-900">{{ $categoria->nombre }}</span>
-                            </td>
-                            <td class="px-6 py-4 text-slate-500 max-w-sm truncate">
-                                {{ $categoria->descripcion ?? 'Sin descripción' }}
-                            </td>
-                            <td class="px-6 py-4 text-center">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-800 font-semibold border border-slate-200">
-                                    <i class="bi bi-boxes text-[10px]"></i>
-                                    {{ $categoria->productos_count }} producto(s)
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-end gap-2">
-                                    <button type="button" title="Editar categoría"
-                                        onclick="abrirModalEditarCat({{ $categoria->id_categoria }}, '{{ addslashes($categoria->nombre) }}', '{{ addslashes($categoria->descripcion ?? '') }}')"
-                                        class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer">
-                                        <i class="bi bi-pencil text-xs"></i>
-                                    </button>
-                                    <button type="button" title="Eliminar categoría"
-                                        onclick="abrirModalEliminarCat({{ $categoria->id_categoria }}, '{{ addslashes($categoria->nombre) }}', {{ (int) $categoria->productos_count }})"
-                                        class="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 text-red-500 flex items-center justify-center transition-colors cursor-pointer">
-                                        <i class="bi bi-trash text-xs"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-slate-400">
-                                <i class="bi bi-tags text-3xl block mb-2"></i>
-                                No hay categorías registradas.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                {{-- Contenedor de Imagen de Altura Fija Amplia y Uniforme (estilo Productos 280px) --}}
+                <div class="w-full relative overflow-hidden bg-slate-100 border-b border-slate-100 flex-shrink-0" style="height: 280px; min-height: 280px; max-height: 280px;">
+                    @if($catImgUrl)
+                        <img src="{{ $catImgUrl }}"
+                             alt="{{ $categoria->nombre }}"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             style="height: 280px; width: 100%; object-fit: cover;">
+                    @else
+                        <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-50" style="height: 280px;">
+                            <i class="bi bi-image text-5xl mb-2 text-slate-300"></i>
+                            <span class="text-xs font-semibold text-slate-400">Sin foto</span>
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Cuerpo de la Tarjeta (Todos los datos debajo de la foto) --}}
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div>
+                        {{-- Tag de tipo --}}
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                            CATEGORÍA
+                        </p>
+
+                        {{-- Nombre de la Categoría --}}
+                        <h4 class="text-sm font-bold text-slate-900 mt-1 leading-snug line-clamp-1" title="{{ $categoria->nombre }}">
+                            {{ $categoria->nombre }}
+                        </h4>
+
+                        {{-- Descripción breve --}}
+                        @if($categoria->descripcion)
+                            <p class="text-xs text-slate-500 mt-1 line-clamp-2">
+                                {{ $categoria->descripcion }}
+                            </p>
+                        @else
+                            <p class="text-xs text-slate-400 italic mt-1">
+                                Sin descripción
+                            </p>
+                        @endif
+                    </div>
+
+                    {{-- Productos Vinculados --}}
+                    <div class="pt-2 border-t border-slate-100 flex items-end justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Productos</span>
+                            <p class="text-xl font-black text-slate-900">
+                                {{ $categoria->productos_count }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Botones de Acción (Editar y Eliminar) con el estilo exacto de productos --}}
+                    <div class="pt-3 border-t border-slate-100 flex items-center gap-1">
+                        {{-- Botón Editar --}}
+                        <button type="button"
+                            onclick="abrirModalEditarCat({{ $categoria->id_categoria }}, '{{ addslashes($categoria->nombre) }}', '{{ addslashes($categoria->descripcion ?? '') }}', '{{ $catImgUrl }}')"
+                            class="flex-1 py-1.5 px-3 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="bi bi-pencil text-slate-400"></i> Editar
+                        </button>
+
+                        {{-- Botón Eliminar --}}
+                        <button type="button"
+                            onclick="abrirModalEliminarCat({{ $categoria->id_categoria }}, '{{ addslashes($categoria->nombre) }}', {{ (int) $categoria->productos_count }})"
+                            class="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg text-sm transition-colors cursor-pointer"
+                            title="Eliminar categoría">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        @empty
+            <div class="col-span-full py-16 text-center text-slate-400 bg-white border border-slate-200 rounded-2xl">
+                <i class="bi bi-tags text-4xl block mb-3 text-slate-300"></i>
+                <p class="text-sm font-semibold text-slate-700">No hay categorías registradas</p>
+                <p class="text-xs text-slate-400 mt-1">Crea tu primera categoría para organizar el inventario.</p>
+            </div>
+        @endforelse
+
+        {{-- Estado sin resultados de búsqueda --}}
+        <div id="sinResultadosFiltro" class="col-span-full py-16 text-center text-slate-400 bg-white border border-slate-200 rounded-2xl hidden">
+            <i class="bi bi-search text-3xl block mb-2 text-slate-300"></i>
+            <p class="text-sm font-semibold text-slate-700">No se encontraron categorías</p>
+            <p class="text-xs text-slate-400 mt-1">Intenta con otro término de búsqueda.</p>
         </div>
-
     </div>
 
 </div>
@@ -93,14 +143,33 @@
 <div id="modalCrearCat" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <h3 class="font-bold text-slate-900 text-base">Nueva Categoría</h3>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-tags text-xl text-slate-800"></i>
+                <h3 class="font-bold text-slate-900 text-base">Nueva Categoría</h3>
+            </div>
             <button type="button" onclick="cerrarModalCrearCat()" class="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
 
-        <form action="{{ route('admin.categorias.store') }}" method="POST" class="space-y-4" autocomplete="off">
+        <form action="{{ route('admin.categorias.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
             @csrf
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Imagen de la Categoría (Opcional)</label>
+                <div class="flex items-center gap-4">
+                    <div id="preview_cat_create_box" class="w-16 h-16 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-slate-400">
+                        <i class="bi bi-image text-xl" id="preview_cat_create_icon"></i>
+                        <img id="preview_cat_create_img" class="w-full h-full object-cover hidden" alt="Preview">
+                    </div>
+                    <div class="flex-1">
+                        <input type="file" name="imagen" id="imagen_cat_create" accept="image/*" onchange="previewCatImage(this, 'preview_cat_create_img', 'preview_cat_create_icon')"
+                            class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
+                        <p class="text-[10px] text-slate-400 mt-1">Formatos: JPG, PNG, WEBP. Máximo 2MB.</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="space-y-1">
                 <label for="cat_nombre" class="block text-xs font-bold text-slate-700">Nombre</label>
                 <input type="text" name="nombre" id="cat_nombre" required placeholder="Ej. Accesorios Gaming"
@@ -114,8 +183,8 @@
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-                <button type="button" onclick="cerrarModalCrearCat()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold">Cancelar</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm">Guardar</button>
+                <button type="button" onclick="cerrarModalCrearCat()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold cursor-pointer">Cancelar</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm cursor-pointer">Guardar</button>
             </div>
         </form>
     </div>
@@ -125,15 +194,34 @@
 <div id="modalEditarCat" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <h3 class="font-bold text-slate-900 text-base">Editar Categoría</h3>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-pencil-square text-xl text-slate-800"></i>
+                <h3 class="font-bold text-slate-900 text-base">Editar Categoría</h3>
+            </div>
             <button type="button" onclick="cerrarModalEditarCat()" class="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
 
-        <form id="formEditarCat" method="POST" class="space-y-4" autocomplete="off">
+        <form id="formEditarCat" method="POST" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
             @csrf
             @method('PUT')
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Imagen de la Categoría (Opcional)</label>
+                <div class="flex items-center gap-4">
+                    <div id="preview_cat_edit_box" class="w-16 h-16 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0 text-slate-400">
+                        <i class="bi bi-image text-xl" id="preview_cat_edit_icon"></i>
+                        <img id="preview_cat_edit_img" class="w-full h-full object-cover hidden" alt="Preview">
+                    </div>
+                    <div class="flex-1">
+                        <input type="file" name="imagen" id="imagen_cat_edit" accept="image/*" onchange="previewCatImage(this, 'preview_cat_edit_img', 'preview_cat_edit_icon')"
+                            class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
+                        <p class="text-[10px] text-slate-400 mt-1">Selecciona una nueva imagen solo si deseas reemplazarla.</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="space-y-1">
                 <label for="edit_cat_nombre" class="block text-xs font-bold text-slate-700">Nombre</label>
                 <input type="text" name="nombre" id="edit_cat_nombre" required
@@ -147,8 +235,8 @@
             </div>
 
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
-                <button type="button" onclick="cerrarModalEditarCat()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold">Cancelar</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm">Actualizar</button>
+                <button type="button" onclick="cerrarModalEditarCat()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold cursor-pointer">Cancelar</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm cursor-pointer">Actualizar</button>
             </div>
         </form>
     </div>
@@ -158,7 +246,7 @@
 <div id="modalEliminarCat" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
         
-        <div id="eliminar_cat_icon_container" class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mx-auto">
+        <div id="eliminar_cat_icon_container" class="flex items-center justify-center text-3xl mx-auto text-amber-500 mb-1">
             <i id="eliminar_cat_icon" class="bi bi-shield-exclamation"></i>
         </div>
 
@@ -186,13 +274,80 @@
 </div>
 
 <script>
-    function abrirModalCrearCat() { document.getElementById('modalCrearCat').classList.remove('hidden'); }
+    function aplicarFiltroCategorias() {
+        const texto = (document.getElementById('buscadorCategorias')?.value || '').toLowerCase().trim();
+        const tarjetas = document.querySelectorAll('.card-categoria');
+        let visibles = 0;
+
+        tarjetas.forEach(card => {
+            const nombre = card.dataset.nombre || '';
+            const desc = card.dataset.descripcion || '';
+            const match = !texto || nombre.includes(texto) || desc.includes(texto);
+
+            if (match) {
+                card.style.display = '';
+                visibles++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        const contador = document.getElementById('contadorCategorias');
+        if (contador) {
+            contador.textContent = `${visibles} Categorías Registradas`;
+        }
+
+        const sinResultados = document.getElementById('sinResultadosFiltro');
+        if (sinResultados) {
+            if (visibles === 0 && tarjetas.length > 0) {
+                sinResultados.classList.remove('hidden');
+            } else {
+                sinResultados.classList.add('hidden');
+            }
+        }
+    }
+
+    function previewCatImage(input, imgId, iconId) {
+        const img = document.getElementById(imgId);
+        const icon = document.getElementById(iconId);
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+                icon.classList.add('hidden');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function abrirModalCrearCat() {
+        document.getElementById('imagen_cat_create').value = '';
+        document.getElementById('preview_cat_create_img').src = '';
+        document.getElementById('preview_cat_create_img').classList.add('hidden');
+        document.getElementById('preview_cat_create_icon').classList.remove('hidden');
+        document.getElementById('modalCrearCat').classList.remove('hidden');
+    }
     function cerrarModalCrearCat() { document.getElementById('modalCrearCat').classList.add('hidden'); }
 
-    function abrirModalEditarCat(id, nombre, desc) {
+    function abrirModalEditarCat(id, nombre, desc, imgUrl) {
         document.getElementById('formEditarCat').action = `/admin/categorias/${id}`;
         document.getElementById('edit_cat_nombre').value = nombre;
         document.getElementById('edit_cat_desc').value = desc;
+        document.getElementById('imagen_cat_edit').value = '';
+
+        const editImg = document.getElementById('preview_cat_edit_img');
+        const editIcon = document.getElementById('preview_cat_edit_icon');
+        if (imgUrl) {
+            editImg.src = imgUrl;
+            editImg.classList.remove('hidden');
+            editIcon.classList.add('hidden');
+        } else {
+            editImg.src = '';
+            editImg.classList.add('hidden');
+            editIcon.classList.remove('hidden');
+        }
+
         document.getElementById('modalEditarCat').classList.remove('hidden');
     }
     function cerrarModalEditarCat() { document.getElementById('modalEditarCat').classList.add('hidden'); }
@@ -209,7 +364,7 @@
 
         if (totalProductos > 0) {
             // Bloqueado por integridad referencial
-            iconContainer.className = "w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mx-auto";
+            iconContainer.className = "flex items-center justify-center text-3xl mx-auto text-amber-500 mb-1";
             icon.className = "bi bi-shield-exclamation";
             titulo.textContent = "No se puede eliminar esta categoría";
             descripcion.innerHTML = `La categoría <strong class="text-slate-800">${nombre}</strong> tiene <strong class="text-slate-800">${totalProductos} producto(s)</strong> vinculados en el catálogo. Por seguridad no es posible eliminarla; primero debes reasignar o eliminar sus productos.`;
@@ -218,7 +373,7 @@
             btnBloqueado.classList.remove('hidden');
         } else {
             // Permitido eliminar
-            iconContainer.className = "w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mx-auto";
+            iconContainer.className = "flex items-center justify-center text-3xl mx-auto text-rose-500 mb-1";
             icon.className = "bi bi-trash3-fill";
             titulo.textContent = "¿Eliminar Categoría?";
             descripcion.innerHTML = `¿Estás seguro de que deseas eliminar permanentemente la categoría <strong class="text-slate-800">${nombre}</strong>? Esta acción no se puede deshacer.`;

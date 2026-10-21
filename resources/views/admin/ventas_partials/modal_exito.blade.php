@@ -2,7 +2,7 @@
 @if(session('venta_creada_id'))
 <div id="modalVentaCreadaExito" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 text-center space-y-4 animate-in fade-in zoom-in-95 duration-150">
-        <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto shadow-inner">
+        <div class="flex items-center justify-center text-4xl text-emerald-600 mx-auto">
             <i class="bi bi-cart-check-fill"></i>
         </div>
         <div>

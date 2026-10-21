@@ -86,3 +86,11 @@ Route::middleware(['auth', 'role:vendedor'])->prefix('vendedor')->name('vendedor
     // Ganancias Vendedor
     Route::get('/ganancias', [Vendedor\GananciaController::class, 'index'])->name('ganancias');
 });
+
+// Rutas de Perfil de Usuario (Accesible tanto para Administrador como Vendedor)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/perfil', [\App\Http\Controllers\PerfilController::class, 'index'])->name('perfil');
+    Route::put('/perfil', [\App\Http\Controllers\PerfilController::class, 'update'])->name('perfil.update');
+    Route::put('/perfil/password', [\App\Http\Controllers\PerfilController::class, 'updatePassword'])->name('perfil.password');
+    Route::delete('/perfil/foto', [\App\Http\Controllers\PerfilController::class, 'destroyPhoto'])->name('perfil.photo.destroy');
+});

@@ -11,12 +11,15 @@
     {{-- Encabezado con buscador, filtros de categoría y estado, y botón nuevo --}}
     <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div>
-            <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                <span>Catálogo de Productos</span>
-                <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700" id="contadorProductos">
-                    {{ $productos->count() }} artículos
-                </span>
-            </h3>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-boxes text-xl text-indigo-600"></i>
+                <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                    <span>Catálogo de Productos</span>
+                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700" id="contadorProductos">
+                        {{ $productos->count() }} artículos
+                    </span>
+                </h3>
+            </div>
             <p class="text-xs text-slate-500 mt-0.5">Control y filtrado de artículos activos e inactivos</p>
         </div>
 
@@ -91,26 +94,26 @@
                     <div>
                         {{-- Fila de Insignias: Categoría, Estado de Stock y Estado Activo/Inactivo --}}
                         <div class="flex items-center justify-between gap-2 mb-2">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 truncate max-w-[120px]">
-                                {{ $producto->categoria->nombre ?? 'General' }}
+                            <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate max-w-[130px] flex items-center gap-1">
+                                <i class="bi bi-tag text-slate-400"></i> {{ $producto->categoria->nombre ?? 'General' }}
                             </span>
 
-                            <div class="flex items-center gap-1.5">
+                            <div class="flex items-center gap-2">
                                 @if(!$producto->activo)
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 flex-shrink-0" title="Oculto para vendedores">
-                                        Desactivado
+                                    <span class="text-[11px] font-bold text-amber-600 flex items-center gap-1 flex-shrink-0" title="Oculto para vendedores">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Desactivado
                                     </span>
                                 @elseif($producto->stock_actual <= 0)
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200 flex-shrink-0">
-                                        Agotado
+                                    <span class="text-[11px] font-bold text-rose-600 flex items-center gap-1 flex-shrink-0">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Agotado
                                     </span>
                                 @elseif($producto->stock_actual <= $producto->stock_minimo)
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 flex-shrink-0">
-                                        Bajo ({{ $producto->stock_actual }})
+                                    <span class="text-[11px] font-bold text-amber-600 flex items-center gap-1 flex-shrink-0">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Bajo ({{ $producto->stock_actual }})
                                     </span>
                                 @else
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex-shrink-0">
-                                        {{ $producto->stock_actual }} disp.
+                                    <span class="text-[11px] font-bold text-emerald-600 flex items-center gap-1 flex-shrink-0">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {{ $producto->stock_actual }} disp.
                                     </span>
                                 @endif
                             </div>
@@ -150,26 +153,26 @@
                     </div>
 
                     {{-- Botones de Acción (Editar, Desactivar/Activar y Eliminar) --}}
-                    <div class="pt-3 border-t border-slate-100 flex items-center gap-2">
+                    <div class="pt-3 border-t border-slate-100 flex items-center gap-1">
                         {{-- Botón Editar --}}
                         <button type="button"
                             onclick="abrirModalEditarProd({{ $producto->id_producto }}, '{{ addslashes($producto->nombre) }}', {{ $producto->id_categoria }}, '{{ addslashes($producto->marca ?? '') }}', {{ $producto->stock_actual }}, {{ $producto->stock_minimo }}, {{ $producto->precio_venta }}, '{{ addslashes($producto->descripcion ?? '') }}', '{{ $producto->imagen ? asset('uploads/productos/' . $producto->imagen) : '' }}')"
-                            class="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
-                            <i class="bi bi-pencil"></i> Editar
+                            class="flex-1 py-1.5 px-3 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="bi bi-pencil text-slate-400"></i> Editar
                         </button>
 
                         {{-- Botón Desactivar / Activar --}}
                         @if($producto->activo)
                             <button type="button"
                                 onclick="abrirModalToggleProd({{ $producto->id_producto }}, '{{ addslashes($producto->nombre) }}', true)"
-                                class="py-2 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                                class="p-2 text-amber-500 hover:text-amber-700 hover:bg-amber-50 rounded-lg text-sm transition-colors cursor-pointer"
                                 title="Desactivar producto (ocultar a vendedores sin borrar historial)">
                                 <i class="bi bi-eye-slash"></i>
                             </button>
                         @else
                             <button type="button"
                                 onclick="abrirModalToggleProd({{ $producto->id_producto }}, '{{ addslashes($producto->nombre) }}', false)"
-                                class="py-2 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                                class="p-2 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg text-sm transition-colors cursor-pointer"
                                 title="Activar producto (mostrar de nuevo en el catálogo de vendedores)">
                                 <i class="bi bi-eye"></i>
                             </button>
@@ -178,7 +181,7 @@
                         {{-- Botón Eliminar --}}
                         <button type="button"
                             onclick="abrirModalEliminarProd({{ $producto->id_producto }}, '{{ addslashes($producto->nombre) }}')"
-                            class="py-2 px-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                            class="p-2 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg text-sm transition-colors cursor-pointer"
                             title="Eliminar permanentemente">
                             <i class="bi bi-trash"></i>
                         </button>
@@ -210,7 +213,10 @@
 <div id="modalCrearProd" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-lg w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <h3 class="font-bold text-slate-900 text-base">Nuevo Producto</h3>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-box-seam text-xl text-slate-800"></i>
+                <h3 class="font-bold text-slate-900 text-base">Nuevo Producto</h3>
+            </div>
             <button type="button" onclick="cerrarModalCrearProd()" class="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">
                 <i class="bi bi-x-lg"></i>
             </button>
@@ -296,7 +302,10 @@
 <div id="modalEditarProd" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-lg w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <h3 class="font-bold text-slate-900 text-base">Editar Producto</h3>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-pencil-square text-xl text-slate-800"></i>
+                <h3 class="font-bold text-slate-900 text-base">Editar Producto</h3>
+            </div>
             <button type="button" onclick="cerrarModalEditarProd()" class="text-slate-400 hover:text-slate-700 text-lg cursor-pointer">
                 <i class="bi bi-x-lg"></i>
             </button>
@@ -381,7 +390,7 @@
 {{-- ========================================================================= --}}
 <div id="modalToggleProd" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-        <div id="toggle_prod_icon_container" class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl mx-auto">
+        <div id="toggle_prod_icon_container" class="flex items-center justify-center text-3xl mx-auto mb-1">
             <i id="toggle_prod_icon" class="bi"></i>
         </div>
 
@@ -409,7 +418,7 @@
 {{-- ========================================================================= --}}
 <div id="modalEliminarProd" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-sm w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-        <div class="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center text-xl mx-auto">
+        <div class="flex items-center justify-center text-3xl mx-auto text-rose-500 mb-1">
             <i class="bi bi-exclamation-triangle-fill"></i>
         </div>
 
@@ -543,7 +552,7 @@
 
         if (esActivoActualmente) {
             // Desactivar
-            iconContainer.className = "w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mx-auto";
+            iconContainer.className = "flex items-center justify-center text-3xl mx-auto text-amber-500 mb-1";
             icon.className = "bi bi-eye-slash";
             titulo.textContent = "¿Desactivar Producto?";
             descripcion.innerHTML = `Estás a punto de desactivar <strong class="text-slate-800">${nombre}</strong>. El producto se mantendrá en tu historial pero ya no aparecerá en el catálogo del vendedor.`;
@@ -551,7 +560,7 @@
             btn.textContent = "Sí, Desactivar";
         } else {
             // Activar
-            iconContainer.className = "w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mx-auto";
+            iconContainer.className = "flex items-center justify-center text-3xl mx-auto text-emerald-600 mb-1";
             icon.className = "bi bi-eye";
             titulo.textContent = "¿Activar Producto?";
             descripcion.innerHTML = `Estás a punto de reactivar <strong class="text-slate-800">${nombre}</strong> para que vuelva a estar visible en el catálogo de ventas.`;

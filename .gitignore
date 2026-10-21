@@ -25,3 +25,15 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Documentos
+*.xlsx
+*.xls
+*.docx
+*.doc
+*.pdf
+Documentacion/
+public/uploads/categorias/*
+!public/uploads/categorias/.gitkeep
+public/uploads/usuarios/*
+!public/uploads/usuarios/.gitkeep

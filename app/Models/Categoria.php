@@ -16,7 +16,20 @@ class Categoria extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
+        'imagen',
     ];
+
+    /**
+     * Obtener la URL pública de la imagen de la categoría (si existe).
+     */
+    public function getImagenUrlAttribute(): ?string
+    {
+        if ($this->imagen && file_exists(public_path('uploads/categorias/' . $this->imagen))) {
+            return asset('uploads/categorias/' . $this->imagen);
+        }
+
+        return null;
+    }
 
     /*
     |--------------------------------------------------------------------------

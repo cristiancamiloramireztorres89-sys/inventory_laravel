@@ -11,8 +11,11 @@
     {{-- Tarjetas de Resumen y Botón Nueva Venta --}}
     <div class="flex items-center justify-between">
         <div>
-            <h3 class="text-lg font-extrabold text-slate-900">Mis Ventas Realizadas</h3>
-            <p class="text-xs text-slate-500">Historial de transacciones comerciales registradas por ti</p>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-cart-check-fill text-xl text-emerald-600"></i>
+                <h3 class="text-lg font-extrabold text-slate-900">Mis Ventas Realizadas</h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Historial de transacciones comerciales registradas por ti</p>
         </div>
 
         <button type="button" onclick="abrirModalCrearVentaVendedor()"
@@ -28,9 +31,7 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Mis Ventas Totales</p>
                 <h3 class="text-2xl font-black text-slate-900 mt-1">{{ $totalVentas }}</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
-                <i class="bi bi-cart-check"></i>
-            </div>
+            <i class="bi bi-cart-check text-2xl text-emerald-600"></i>
         </div>
 
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-center justify-between">
@@ -38,9 +39,7 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Mi Recaudación Total</p>
                 <h3 class="text-2xl font-black text-slate-900 mt-1">${{ number_format($totalDinero, 2) }}</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
-                <i class="bi bi-cash-coin"></i>
-            </div>
+            <i class="bi bi-cash-coin text-2xl text-indigo-600"></i>
         </div>
 
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-center justify-between">
@@ -48,9 +47,7 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Punto de Venta</p>
                 <h3 class="text-sm font-bold text-slate-900 mt-1">Mostrador Activo</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                <i class="bi bi-shop"></i>
-            </div>
+            <i class="bi bi-shop text-2xl text-blue-600"></i>
         </div>
     </div>
 

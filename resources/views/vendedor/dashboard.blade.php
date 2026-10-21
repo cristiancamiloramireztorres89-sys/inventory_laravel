@@ -43,9 +43,7 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition-all">
             <div class="flex items-center justify-between">
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Facturado por Ti</p>
-                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
-                    <i class="bi bi-cash-stack"></i>
-                </div>
+                <i class="bi bi-cash-stack text-2xl text-blue-600"></i>
             </div>
             <h3 class="text-2xl font-black text-slate-900 mt-2">${{ number_format($miFacturado, 2) }}</h3>
             <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-100 font-medium">
@@ -58,9 +56,7 @@
         <div class="bg-white border border-emerald-200/80 rounded-2xl p-5 shadow-sm bg-gradient-to-br from-white via-emerald-50/20 to-emerald-50/40 hover:border-emerald-300 transition-all">
             <div class="flex items-center justify-between">
                 <p class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Tu Ganancia Neta</p>
-                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg shadow-inner">
-                    <i class="bi bi-piggy-bank-fill"></i>
-                </div>
+                <i class="bi bi-piggy-bank-fill text-2xl text-emerald-600"></i>
             </div>
             <h3 class="text-2xl font-black {{ $miGanancia >= 0 ? 'text-emerald-600' : 'text-rose-600' }} mt-2">
                 {{ $miGanancia >= 0 ? '+$' . number_format($miGanancia, 2) : '-$' . number_format(abs($miGanancia), 2) }}
@@ -75,9 +71,7 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition-all">
             <div class="flex items-center justify-between">
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tus Abastecimientos</p>
-                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-                    <i class="bi bi-cart-check-fill"></i>
-                </div>
+                <i class="bi bi-cart-check-fill text-2xl text-amber-600"></i>
             </div>
             <h3 class="text-2xl font-black text-slate-900 mt-2">${{ number_format($miTotalCompras, 2) }}</h3>
             <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-100 font-medium">
@@ -90,9 +84,7 @@
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-slate-300 transition-all">
             <div class="flex items-center justify-between">
                 <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Productos en Catálogo</p>
-                <div class="w-10 h-10 rounded-xl bg-violet-50 text-violet-600 flex items-center justify-center text-lg">
-                    <i class="bi bi-boxes"></i>
-                </div>
+                <i class="bi bi-boxes text-2xl text-violet-600"></i>
             </div>
             <h3 class="text-2xl font-black text-slate-900 mt-2">{{ $totalProductos }} <span class="text-xs font-normal text-slate-400">artículos</span></h3>
             <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2 pt-2 border-t border-slate-100 font-medium">
@@ -110,9 +102,7 @@
         <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
             <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
-                        <i class="bi bi-receipt"></i>
-                    </div>
+                    <i class="bi bi-receipt text-xl text-emerald-600 flex-shrink-0"></i>
                     <div>
                         <h4 class="font-extrabold text-slate-900 text-sm">Tus Últimas Ventas Realizadas</h4>
                         <p class="text-[11px] text-slate-500">Historial reciente de cobros al mostrador</p>
@@ -170,9 +160,7 @@
             <div>
                 <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                     <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center text-sm">
-                            <i class="bi bi-tag-fill"></i>
-                        </div>
+                        <i class="bi bi-tag-fill text-xl text-violet-600 flex-shrink-0"></i>
                         <h4 class="font-extrabold text-slate-900 text-sm">Productos con Más Stock</h4>
                     </div>
                     <a href="{{ route('vendedor.productos') }}" class="text-[11px] font-bold text-violet-600 hover:underline">
@@ -187,7 +175,7 @@
                                 <p class="font-bold text-slate-900 truncate" title="{{ $pd->nombre }}">{{ $pd->nombre }}</p>
                                 <p class="text-[10px] text-slate-500">${{ number_format($pd->precio_venta, 0, ',', '.') }} • {{ $pd->categoria->nombre ?? 'General' }}</p>
                             </div>
-                            <span class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-black text-[11px] flex-shrink-0">
+                            <span class="font-bold text-emerald-600 text-xs flex-shrink-0">
                                 {{ $pd->stock_actual }} disp.
                             </span>
                         </div>

@@ -38,6 +38,7 @@ class UsuarioController extends Controller
             'correo'     => ['required', 'string', 'email', 'max:100', 'unique:usuarios,correo'],
             'id_rol'     => ['required', 'integer', 'exists:roles,id_rol'],
             'contrasena' => ['required', 'string', 'min:6'],
+            'foto'       => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
         ], [
             'nombre.required'     => 'El nombre es obligatorio.',
             'correo.required'     => 'El correo electrónico es obligatorio.',
@@ -45,13 +46,29 @@ class UsuarioController extends Controller
             'id_rol.required'     => 'Debes seleccionar un rol.',
             'contrasena.required' => 'La contraseña es obligatoria.',
             'contrasena.min'      => 'La contraseña debe tener al menos 6 caracteres.',
+            'foto.image'          => 'El archivo seleccionado debe ser una imagen válida.',
+            'foto.mimes'          => 'Formatos permitidos para la foto: JPG, JPEG, PNG, WEBP, GIF.',
+            'foto.max'            => 'La foto no debe superar los 2MB de peso.',
         ]);
+
+        $nombreFoto = null;
+        if ($request->hasFile('foto')) {
+            $destino = public_path('uploads/usuarios');
+            if (! file_exists($destino)) {
+                mkdir($destino, 0755, true);
+            }
+
+            $file = $request->file('foto');
+            $nombreFoto = 'avatar_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move($destino, $nombreFoto);
+        }
 
         Usuario::create([
             'nombre'     => $validated['nombre'],
             'correo'     => $validated['correo'],
             'id_rol'     => $validated['id_rol'],
             'contrasena' => Hash::make($validated['contrasena']),
+            'foto'       => $nombreFoto,
             'activo'     => true,
         ]);
 
@@ -69,12 +86,16 @@ class UsuarioController extends Controller
             'correo'     => ['required', 'string', 'email', 'max:100', 'unique:usuarios,correo,' . $usuario->id_usuario . ',id_usuario'],
             'id_rol'     => ['required', 'integer', 'exists:roles,id_rol'],
             'contrasena' => ['nullable', 'string', 'min:6'],
+            'foto'       => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:2048'],
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
             'correo.required' => 'El correo electrónico es obligatorio.',
             'correo.unique'   => 'Este correo ya pertenece a otro usuario.',
             'id_rol.required' => 'Debes seleccionar un rol.',
             'contrasena.min'  => 'La nueva contraseña debe tener al menos 6 caracteres.',
+            'foto.image'      => 'El archivo seleccionado debe ser una imagen válida.',
+            'foto.mimes'      => 'Formatos permitidos para la foto: JPG, JPEG, PNG, WEBP, GIF.',
+            'foto.max'        => 'La foto no debe superar los 2MB de peso.',
         ]);
 
         $data = [
@@ -85,6 +106,22 @@ class UsuarioController extends Controller
 
         if (!empty($validated['contrasena'])) {
             $data['contrasena'] = Hash::make($validated['contrasena']);
+        }
+
+        if ($request->hasFile('foto')) {
+            $destino = public_path('uploads/usuarios');
+            if (! file_exists($destino)) {
+                mkdir($destino, 0755, true);
+            }
+
+            if ($usuario->foto && file_exists($destino . '/' . $usuario->foto)) {
+                @unlink($destino . '/' . $usuario->foto);
+            }
+
+            $file = $request->file('foto');
+            $nombreFoto = 'avatar_' . $usuario->id_usuario . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move($destino, $nombreFoto);
+            $data['foto'] = $nombreFoto;
         }
 
         $usuario->update($data);
@@ -144,7 +181,12 @@ class UsuarioController extends Controller
                 ->with('error', "No se puede eliminar a '{$usuario->nombre}' porque tiene {$detalle} asociadas en el historial. Puedes desactivar su cuenta para revocarle el acceso.");
         }
 
-        // 3. Eliminar usuario de la base de datos
+        // 3. Eliminar foto física del disco si existe
+        if ($usuario->foto && file_exists(public_path('uploads/usuarios/' . $usuario->foto))) {
+            @unlink(public_path('uploads/usuarios/' . $usuario->foto));
+        }
+
+        // 4. Eliminar usuario de la base de datos
         $nombre = $usuario->nombre;
         $usuario->delete();
 

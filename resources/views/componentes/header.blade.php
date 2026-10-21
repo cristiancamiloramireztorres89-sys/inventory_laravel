@@ -20,12 +20,9 @@
             <p class="text-xs font-bold text-slate-900">{{ auth()->user()->nombre ?? 'Usuario' }}</p>
             <p class="text-[11px] text-slate-500">{{ auth()->user()->correo ?? '' }}</p>
         </div>
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit"
-                class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center gap-1.5 transition-colors cursor-pointer">
-                <i class="bi bi-box-arrow-right"></i> Salir
-            </button>
-        </form>
+        <button type="button" onclick="abrirModalLogout()"
+            class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 flex items-center gap-1.5 transition-colors cursor-pointer">
+            <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
     </div>
 </header>

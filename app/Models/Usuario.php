@@ -18,6 +18,8 @@ class Usuario extends Authenticatable
         'id_rol',
         'nombre',
         'correo',
+        'foto',
+        'telefono',
         'contrasena',
         'activo',
     ];
@@ -105,6 +107,18 @@ class Usuario extends Authenticatable
     public function estaActivo(): bool
     {
         return (bool) $this->activo;
+    }
+
+    /**
+     * Obtener la URL pública de la foto de perfil (si existe).
+     */
+    public function getFotoUrlAttribute(): ?string
+    {
+        if ($this->foto && file_exists(public_path('uploads/usuarios/' . $this->foto))) {
+            return asset('uploads/usuarios/' . $this->foto);
+        }
+
+        return null;
     }
 
     /*

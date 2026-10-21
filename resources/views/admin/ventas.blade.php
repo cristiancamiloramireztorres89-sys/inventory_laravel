@@ -11,8 +11,11 @@
     {{-- Tarjetas de Resumen y Botón Nueva Venta --}}
     <div class="flex items-center justify-between">
         <div>
-            <h3 class="text-lg font-extrabold text-slate-900">Historial de Ventas</h3>
-            <p class="text-xs text-slate-500">Transacciones comerciales y salidas de inventario</p>
+            <div class="flex items-center gap-2.5">
+                <i class="bi bi-cart-check-fill text-xl text-emerald-600"></i>
+                <h3 class="text-lg font-extrabold text-slate-900">Historial de Ventas</h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Transacciones comerciales y salidas de inventario</p>
         </div>
 
         <button type="button" onclick="abrirModalCrearVenta()"
@@ -28,9 +31,7 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Ventas</p>
                 <h3 class="text-2xl font-black text-slate-900 mt-1">{{ $totalVentas }}</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
-                <i class="bi bi-graph-up-arrow"></i>
-            </div>
+            <i class="bi bi-graph-up-arrow text-2xl text-emerald-600"></i>
         </div>
 
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-center justify-between">
@@ -38,9 +39,7 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ingresos Totales</p>
                 <h3 class="text-2xl font-black text-slate-900 mt-1">${{ number_format($totalDinero, 2) }}</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
-                <i class="bi bi-cash-stack"></i>
-            </div>
+            <i class="bi bi-cash-stack text-2xl text-indigo-600"></i>
         </div>
 
         <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm flex items-center justify-between">
@@ -48,9 +47,7 @@
                 <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ventas por Usuario</p>
                 <h3 class="text-sm font-bold text-slate-900 mt-1">Trazabilidad Total</h3>
             </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
-                <i class="bi bi-person-badge"></i>
-            </div>
+            <i class="bi bi-person-badge text-2xl text-blue-600"></i>
         </div>
     </div>
 

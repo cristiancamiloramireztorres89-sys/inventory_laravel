@@ -2,9 +2,7 @@
 <div id="modalEliminarVentaVendedor" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-lg flex-shrink-0">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-            </div>
+            <i class="bi bi-exclamation-triangle-fill text-2xl text-rose-600 flex-shrink-0"></i>
             <div>
                 <h3 class="font-bold text-slate-900 text-base">¿Eliminar Venta #<span id="vendedor_eliminar_id_txt"></span>?</h3>
                 <p class="text-xs text-slate-500 mt-0.5">Esta acción devolverá las existencias de los artículos al inventario.</p>
