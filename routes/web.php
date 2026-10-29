@@ -27,21 +27,18 @@ Route::get('/', function () {
 require __DIR__.'/auth.php';
 
 Route::get('/diag', function () {
+    session()->put('test_key', 'test_value');
+    session()->save();
+
     return response()->json([
+        'session_id' => session()->getId(),
+        'session_all' => session()->all(),
         'session_driver' => config('session.driver'),
-        'session_lifetime' => config('session.lifetime'),
-        'session_secure' => config('session.secure'),
-        'session_domain' => config('session.domain'),
-        'session_path' => config('session.path'),
-        'session_same_site' => config('session.same_site'),
         'session_files' => config('session.files'),
         'sessions_dir_writable' => is_writable(config('session.files')),
-        'app_env' => app()->environment(),
-        'app_key_exists' => !empty(config('app.key')),
-        'cache_driver' => config('cache.default'),
-        'is_secure_request' => request()->isSecure(),
-        'forwarded_proto' => request()->header('x-forwarded-proto'),
-    ]);
+        'app_key_length' => strlen((string) config('app.key')),
+        'app_key_prefix' => substr((string) config('app.key'), 0, 7),
+    ])->cookie('manual_test_cookie', 'works', 60, '/', null, true, true);
 });
 
 // Rutas del Panel Administrador (Protegidas por Auth y Rol Administrador)
