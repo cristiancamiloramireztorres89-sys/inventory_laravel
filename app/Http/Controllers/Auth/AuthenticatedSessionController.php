@@ -41,11 +41,11 @@ class AuthenticatedSessionController extends Controller
         $user = Auth::user();
 
         if ($user->esAdmin()) {
-            return redirect()->intended(route('admin.dashboard'))
+            return redirect()->route('admin.dashboard')
                 ->with('success', 'Bienvenido al panel de Administrador');
         }
 
-        return redirect()->intended(route('vendedor.dashboard'))
+        return redirect()->route('vendedor.dashboard')
             ->with('success', 'Bienvenido al punto de venta');
     }
 
