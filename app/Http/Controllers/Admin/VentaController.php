@@ -171,7 +171,7 @@ class VentaController extends Controller
 
                 $mensajeExito .= " Factura POS enviada al correo {$nuevaVenta->cliente->correo}.";
             } catch (\Throwable $e) {
-                // Si ocurre algún detalle en el envío de correo, no bloqueamos la venta registrada
+                \Illuminate\Support\Facades\Log::warning("Error al enviar factura por correo para la venta #{$nuevaVenta->id_venta}: " . $e->getMessage());
             }
         }
 
