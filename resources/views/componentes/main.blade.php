@@ -16,6 +16,51 @@
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
+
+    <style>
+        #appSidebar {
+            transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 16rem;
+        }
+        #appSidebar.sidebar-collapsed {
+            width: 4.75rem !important; /* 76px */
+        }
+        #appSidebar.sidebar-collapsed .sidebar-text,
+        #appSidebar.sidebar-collapsed .sidebar-section-title,
+        #appSidebar.sidebar-collapsed .sidebar-label,
+        #appSidebar.sidebar-collapsed .sidebar-user-text {
+            display: none !important;
+        }
+        #appSidebar.sidebar-collapsed .sidebar-logo-box {
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+            padding-top: 1rem !important;
+            padding-bottom: 0.875rem !important;
+            gap: 0.625rem !important;
+            min-height: auto !important;
+        }
+        #appSidebar.sidebar-collapsed .sidebar-logo-brand {
+            justify-content: center !important;
+            width: 100% !important;
+        }
+        #appSidebar.sidebar-collapsed .sidebar-link {
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+        #appSidebar.sidebar-collapsed .sidebar-user-wrapper {
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+        #appSidebar.sidebar-collapsed .sidebar-user-box {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex overflow-hidden">
 
@@ -25,13 +70,13 @@
     {{-- Área principal con scroll independiente --}}
     <div class="flex-1 flex flex-col h-screen min-w-0 overflow-y-auto">
 
-        {{-- Header top --}}
+        {{-- Header top (Limpio y elegante) --}}
         <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 flex-shrink-0 shadow-xs">
             <div>
                 <h2 class="text-base font-black text-slate-900 tracking-tight leading-tight">@yield('page_title', 'Dashboard')</h2>
                 <p class="text-xs font-semibold text-slate-600 mt-0.5">@yield('page_subtitle', 'Panel de control')</p>
             </div>
-            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200/80 text-xs font-bold text-slate-700 shadow-2xs">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200/80 text-xs font-bold text-slate-700 shadow-2xs flex-shrink-0">
                 <i class="bi bi-calendar3 text-slate-600 text-xs"></i>
                 <span class="capitalize">{{ now()->locale('es')->isoFormat('dddd, D [de] MMMM YYYY') }}</span>
             </div>
@@ -98,7 +143,32 @@
             dismissElement('flash-success-alert', 3000);
             dismissElement('flash-error-alert', 3000);
             dismissElement('flash-validation-errors', 3500);
+
+            // Restaurar estado del sidebar al cargar
+            if (localStorage.getItem('inventory_sidebar_collapsed') === 'true') {
+                const sb = document.getElementById('appSidebar');
+                const ic = document.getElementById('iconoSidebar');
+                if (sb) sb.classList.add('sidebar-collapsed');
+                if (ic) ic.className = 'bi bi-layout-sidebar-inset text-sm';
+            }
         });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('appSidebar');
+            const icon = document.getElementById('iconoSidebar');
+            if (!sidebar) return;
+
+            const isCollapsed = sidebar.classList.toggle('sidebar-collapsed');
+            localStorage.setItem('inventory_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+
+            if (icon) {
+                if (isCollapsed) {
+                    icon.className = 'bi bi-layout-sidebar-inset text-sm';
+                } else {
+                    icon.className = 'bi bi-layout-sidebar-inset-reverse text-sm';
+                }
+            }
+        }
 
         function abrirModalLogout() {
             const m = document.getElementById('modalConfirmarLogout');
