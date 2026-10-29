@@ -26,6 +26,24 @@ Route::get('/', function () {
 // Rutas de Autenticación
 require __DIR__.'/auth.php';
 
+Route::get('/diag', function () {
+    return response()->json([
+        'session_driver' => config('session.driver'),
+        'session_lifetime' => config('session.lifetime'),
+        'session_secure' => config('session.secure'),
+        'session_domain' => config('session.domain'),
+        'session_path' => config('session.path'),
+        'session_same_site' => config('session.same_site'),
+        'session_files' => config('session.files'),
+        'sessions_dir_writable' => is_writable(config('session.files')),
+        'app_env' => app()->environment(),
+        'app_key_exists' => !empty(config('app.key')),
+        'cache_driver' => config('cache.default'),
+        'is_secure_request' => request()->isSecure(),
+        'forwarded_proto' => request()->header('x-forwarded-proto'),
+    ]);
+});
+
 // Rutas del Panel Administrador (Protegidas por Auth y Rol Administrador)
 Route::middleware(['auth', 'role:administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
