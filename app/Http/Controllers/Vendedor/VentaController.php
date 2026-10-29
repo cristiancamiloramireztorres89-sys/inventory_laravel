@@ -163,20 +163,23 @@ class VentaController extends Controller
         $totalUnidades  = array_sum(array_column($itemsValidados, 'cantidad'));
         $mensajeExito   = "Venta registrada exitosamente con {$totalArticulos} producto(s) ({$totalUnidades} unidades) y stock actualizado.";
 
-        // Si el cliente tiene un correo electrónico válido, enviar la factura automáticamente
+        // Si el cliente tiene un correo electrónico válido, enviar la factura automáticamente en segundo plano (asíncrono)
         if ($nuevaVenta->cliente && !empty($nuevaVenta->cliente->correo) && filter_var($nuevaVenta->cliente->correo, FILTER_VALIDATE_EMAIL)) {
-            try {
-                $pdfContent = Pdf::loadView('ventas.factura_pos_pdf', ['venta' => $nuevaVenta])
-                    ->setPaper([0, 0, 226.77, 550], 'portrait')
-                    ->output();
+            $clienteCorreo = $nuevaVenta->cliente->correo;
+            $mensajeExito .= " Factura POS enviada al correo {$clienteCorreo}.";
 
-                Mail::to($nuevaVenta->cliente->correo)
-                    ->send(new FacturaVentaMail($nuevaVenta, $pdfContent));
+            defer(function () use ($nuevaVenta, $clienteCorreo) {
+                try {
+                    $pdfContent = Pdf::loadView('ventas.factura_pos_pdf', ['venta' => $nuevaVenta])
+                        ->setPaper([0, 0, 226.77, 550], 'portrait')
+                        ->output();
 
-                $mensajeExito .= " Factura POS enviada al correo {$nuevaVenta->cliente->correo}.";
-            } catch (\Throwable $e) {
-                \Illuminate\Support\Facades\Log::warning("Error al enviar factura por correo para la venta #{$nuevaVenta->id_venta}: " . $e->getMessage());
-            }
+                    Mail::to($clienteCorreo)
+                        ->send(new FacturaVentaMail($nuevaVenta, $pdfContent));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("Error al enviar factura por correo para la venta #{$nuevaVenta->id_venta}: " . $e->getMessage());
+                }
+            });
         }
 
         return redirect()->route('vendedor.ventas')
