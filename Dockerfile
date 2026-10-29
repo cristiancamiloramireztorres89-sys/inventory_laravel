@@ -42,6 +42,7 @@ COPY . .
 
 # Copiar los assets compilados por Vite desde la etapa de frontend
 COPY --from=frontend /app/public/build ./public/build
+RUN if [ -f ./public/build/.vite/manifest.json ]; then cp ./public/build/.vite/manifest.json ./public/build/manifest.json; fi
 
 # Instalar dependencias PHP para producción
 RUN composer install --no-dev --optimize-autoloader --no-interaction
