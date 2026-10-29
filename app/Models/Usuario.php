@@ -91,7 +91,7 @@ class Usuario extends Authenticatable
      */
     public function esAdmin(): bool
     {
-        return strtolower(trim($this->rol?->nombre ?? '')) === 'administrador';
+        return (int) $this->id_rol === 1 || strtolower(trim($this->rol?->nombre ?? '')) === 'administrador';
     }
 
     /**
@@ -99,7 +99,7 @@ class Usuario extends Authenticatable
      */
     public function esVendedor(): bool
     {
-        return strtolower(trim($this->rol?->nombre ?? '')) === 'vendedor';
+        return (int) $this->id_rol === 2 || strtolower(trim($this->rol?->nombre ?? '')) === 'vendedor';
     }
 
     /**

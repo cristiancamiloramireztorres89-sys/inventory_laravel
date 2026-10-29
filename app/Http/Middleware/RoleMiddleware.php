@@ -25,16 +25,21 @@ class RoleMiddleware
 
         /** @var \App\Models\Usuario $user */
         $user = Auth::user();
-        $userRole = strtolower(trim($user->rol?->nombre ?? ''));
+        $userRole = (int) $user->id_rol === 1 ? 'administrador' : ((int) $user->id_rol === 2 ? 'vendedor' : strtolower(trim($user->rol?->nombre ?? '')));
 
         $allowedRoles = array_map(fn($r) => strtolower(trim($r)), $roles);
 
         if (! in_array($userRole, $allowedRoles, true)) {
-            // Si es administrador o vendedor e intenta entrar a una sección no autorizada
             if ($user->esAdmin()) {
+                if ($request->routeIs('admin.*')) {
+                    abort(403, 'No tienes permiso para acceder a esta sección.');
+                }
                 return redirect()->route('admin.dashboard')->with('error', 'No tienes permiso para acceder a esa sección.');
             }
 
+            if ($request->routeIs('vendedor.*')) {
+                abort(403, 'No tienes permiso para acceder a esta sección.');
+            }
             return redirect()->route('vendedor.dashboard')->with('error', 'No tienes permiso para acceder a esa sección.');
         }
 
