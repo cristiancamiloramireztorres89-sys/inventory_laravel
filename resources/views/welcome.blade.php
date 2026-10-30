@@ -70,6 +70,20 @@
         .hero-slide {
             transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* Hero a pantalla completa en móvil y PC */
+        .hero-full-viewport {
+            height: calc(100vh - 66px);
+            height: calc(100dvh - 66px);
+            min-height: 520px;
+        }
+        @media (min-width: 640px) {
+            .hero-full-viewport {
+                height: calc(100vh - 70px);
+                height: calc(100dvh - 70px);
+                min-height: 580px;
+            }
+        }
     </style>
 </head>
 <body class="bg-white text-slate-800 font-sans antialiased selection:bg-slate-900 selection:text-white min-h-screen flex flex-col">
@@ -186,7 +200,7 @@
     <!-- ========================================================================= -->
     <!-- HERO SLIDER OPTIMIZADO PARA MÓVIL Y ESCRITORIO -->
     <!-- ========================================================================= -->
-    <section id="inicio" class="relative mt-[66px] sm:mt-[70px] min-h-[540px] sm:h-[580px] lg:h-[620px] overflow-hidden bg-slate-950 text-white border-b border-slate-200 flex items-center">
+    <section id="inicio" class="relative mt-[66px] sm:mt-[70px] hero-full-viewport overflow-hidden bg-slate-950 text-white border-b border-slate-200 flex items-center justify-center">
         
         <!-- Slide 1: Gestión Inteligente -->
         <div class="hero-slide absolute inset-0 opacity-100 flex items-center justify-center px-4 sm:px-8 py-12">
@@ -274,16 +288,21 @@
             <i class="bi bi-chevron-right text-base"></i>
         </button>
 
-        <!-- Puntos Indicadores y Controles Táctiles -->
-        <div class="absolute bottom-5 inset-x-0 z-20 flex items-center justify-center gap-2">
+        <!-- Puntos Indicadores -->
+        <div class="absolute bottom-11 sm:bottom-14 inset-x-0 z-20 flex items-center justify-center gap-2">
             <button onclick="goToSlide(0)" aria-label="Ir a slide 1" class="slider-dot w-7 h-2 rounded-full bg-white transition-all shadow-sm"></button>
             <button onclick="goToSlide(1)" aria-label="Ir a slide 2" class="slider-dot w-2.5 h-2 rounded-full bg-white/40 transition-all shadow-sm"></button>
             <button onclick="goToSlide(2)" aria-label="Ir a slide 3" class="slider-dot w-2.5 h-2 rounded-full bg-white/40 transition-all shadow-sm"></button>
         </div>
+
+        <!-- Indicador de desplazamiento hacia abajo -->
+        <a href="#metricas" aria-label="Desplazarse abajo" class="absolute bottom-2 sm:bottom-3.5 left-1/2 -translate-x-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/80 hover:text-white flex items-center justify-center transition-all group">
+            <i class="bi bi-chevron-down text-xs group-hover:translate-y-0.5 transition-transform animate-bounce"></i>
+        </a>
     </section>
 
     <!-- Métricas Rápidas (Estilo Moderno Card) -->
-    <section class="py-8 sm:py-10 bg-slate-50/60 border-b border-slate-200">
+    <section id="metricas" class="py-8 sm:py-10 bg-slate-50/60 border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 
