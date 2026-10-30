@@ -70,6 +70,7 @@ class PasswordCodeController extends Controller
             Mail::to($correo)->send(new CodigoRecuperacionMail($codigo, $usuario->nombre));
         } catch (\Throwable $e) {
             $mailSent = false;
+            \Illuminate\Support\Facades\Log::warning("Error al enviar código de recuperación a {$correo}: " . $e->getMessage());
         }
 
         // Guardar el correo en sesión para el Paso 2
@@ -170,7 +171,7 @@ class PasswordCodeController extends Controller
         try {
             Mail::to($correo)->send(new CodigoRecuperacionMail($nuevoCodigo, $usuario->nombre));
         } catch (\Throwable $e) {
-            // Continúa para no bloquear flujo
+            \Illuminate\Support\Facades\Log::warning("Error al reenviar código de recuperación a {$correo}: " . $e->getMessage());
         }
 
         return back()->with('status', "Se ha generado y enviado un nuevo código a {$correo}.");
