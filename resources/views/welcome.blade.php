@@ -288,17 +288,20 @@
             <i class="bi bi-chevron-right text-base"></i>
         </button>
 
-        <!-- Puntos Indicadores -->
-        <div class="absolute bottom-11 sm:bottom-14 inset-x-0 z-20 flex items-center justify-center gap-2">
-            <button onclick="goToSlide(0)" aria-label="Ir a slide 1" class="slider-dot w-7 h-2 rounded-full bg-white transition-all shadow-sm"></button>
-            <button onclick="goToSlide(1)" aria-label="Ir a slide 2" class="slider-dot w-2.5 h-2 rounded-full bg-white/40 transition-all shadow-sm"></button>
-            <button onclick="goToSlide(2)" aria-label="Ir a slide 3" class="slider-dot w-2.5 h-2 rounded-full bg-white/40 transition-all shadow-sm"></button>
-        </div>
+        <!-- Controles Inferiores (Puntos Indicadores y Flecha de Desplazamiento) 100% Centrados -->
+        <div class="absolute bottom-3 sm:bottom-4 inset-x-0 z-20 flex flex-col items-center justify-center gap-2.5 pointer-events-none">
+            <!-- Puntos Indicadores -->
+            <div class="flex items-center justify-center gap-2 pointer-events-auto">
+                <button onclick="goToSlide(0)" aria-label="Ir a slide 1" class="slider-dot w-7 h-2 rounded-full bg-white transition-all shadow-sm"></button>
+                <button onclick="goToSlide(1)" aria-label="Ir a slide 2" class="slider-dot w-2.5 h-2 rounded-full bg-white/40 transition-all shadow-sm"></button>
+                <button onclick="goToSlide(2)" aria-label="Ir a slide 3" class="slider-dot w-2.5 h-2 rounded-full bg-white/40 transition-all shadow-sm"></button>
+            </div>
 
-        <!-- Indicador de desplazamiento hacia abajo -->
-        <a href="#caracteristicas" aria-label="Desplazarse abajo" class="absolute bottom-2 sm:bottom-3.5 left-1/2 -translate-x-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/80 hover:text-white flex items-center justify-center transition-all group">
-            <i class="bi bi-chevron-down text-xs group-hover:translate-y-0.5 transition-transform animate-bounce"></i>
-        </a>
+            <!-- Indicador de desplazamiento hacia abajo -->
+            <a href="#caracteristicas" aria-label="Desplazarse abajo" class="pointer-events-auto w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md text-white border border-white/25 shadow-md flex items-center justify-center transition-all active:scale-95 group">
+                <i class="bi bi-chevron-down text-xs group-hover:translate-y-0.5 transition-transform animate-bounce"></i>
+            </a>
+        </div>
     </section>
 
     <!-- Características Principales -->
