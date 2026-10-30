@@ -28,5 +28,13 @@ class AppServiceProvider extends ServiceProvider
                 'session.domain' => null,
             ]);
         }
+
+        // Registrar transporte de correo Brevo API (HTTPS puerto 443)
+        \Illuminate\Support\Facades\Mail::extend('brevo', function (array $config = []) {
+            $key = config('services.brevo.key') ?? env('BREVO_API_KEY');
+            return (new \Symfony\Component\Mailer\Bridge\Brevo\Transport\BrevoTransportFactory())->create(
+                new \Symfony\Component\Mailer\Transport\Dsn('brevo+api', 'default', $key)
+            );
+        });
     }
 }
