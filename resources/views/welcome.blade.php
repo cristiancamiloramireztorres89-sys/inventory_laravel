@@ -296,51 +296,9 @@
         </div>
 
         <!-- Indicador de desplazamiento hacia abajo -->
-        <a href="#metricas" aria-label="Desplazarse abajo" class="absolute bottom-2 sm:bottom-3.5 left-1/2 -translate-x-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/80 hover:text-white flex items-center justify-center transition-all group">
+        <a href="#caracteristicas" aria-label="Desplazarse abajo" class="absolute bottom-2 sm:bottom-3.5 left-1/2 -translate-x-1/2 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/80 hover:text-white flex items-center justify-center transition-all group">
             <i class="bi bi-chevron-down text-xs group-hover:translate-y-0.5 transition-transform animate-bounce"></i>
         </a>
-    </section>
-
-    <!-- Métricas Rápidas (Estilo Moderno Card) -->
-    <section id="metricas" class="py-8 sm:py-10 bg-slate-50/60 border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                
-                <div class="p-4 sm:p-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow transition-shadow flex flex-col items-center text-center">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base mb-2.5">
-                        <i class="bi bi-patch-check-fill"></i>
-                    </div>
-                    <p class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">99.9%</p>
-                    <p class="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">Exactitud de inventario</p>
-                </div>
-
-                <div class="p-4 sm:p-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow transition-shadow flex flex-col items-center text-center">
-                    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base mb-2.5 relative">
-                        <i class="bi bi-broadcast"></i>
-                        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                    </div>
-                    <p class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">En Vivo</p>
-                    <p class="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">Sincronización instantánea</p>
-                </div>
-
-                <div class="p-4 sm:p-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow transition-shadow flex flex-col items-center text-center">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base mb-2.5">
-                        <i class="bi bi-person-badge-fill"></i>
-                    </div>
-                    <p class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Multi-Rol</p>
-                    <p class="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">Admin y Vendedores</p>
-                </div>
-
-                <div class="p-4 sm:p-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow transition-shadow flex flex-col items-center text-center">
-                    <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base mb-2.5">
-                        <i class="bi bi-bell-fill"></i>
-                    </div>
-                    <p class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Auto</p>
-                    <p class="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">Alertas de stock mínimo</p>
-                </div>
-
-            </div>
-        </div>
     </section>
 
     <!-- Características Principales -->
