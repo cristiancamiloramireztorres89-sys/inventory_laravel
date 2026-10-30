@@ -102,55 +102,61 @@
                             <p class="text-sm font-medium text-slate-500 mt-0.5">Desarrollador de Software & Creador de Inventory System</p>
                         </div>
 
-                        <!-- Botón WhatsApp Directo -->
+                        <!-- Estado de disponibilidad -->
                         <div class="flex items-center gap-2">
-                            <a href="https://wa.me/573188145842" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow transition-all active:scale-95">
-                                <i class="bi bi-whatsapp text-sm"></i> Chatear por WhatsApp
-                            </a>
+                            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold shadow-xs">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Disponible
+                            </span>
                         </div>
                     </div>
 
-                    <!-- Datos Clave de Contacto -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
+                    <!-- Botones de Acción Directa (GitHub, Correo, Celular, Ubicación) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-6">
                         
-                        <!-- Email -->
-                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg flex-shrink-0">
+                        <!-- Botón GitHub -->
+                        <a href="https://github.com/cristiancamiloramireztorres89-sys/inventory_laravel" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white flex items-center gap-3 transition-all hover:shadow-md active:scale-95 group">
+                            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-xl text-white group-hover:scale-110 transition-transform flex-shrink-0">
+                                <i class="bi bi-github"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">GitHub</span>
+                                <span class="text-xs font-bold text-white truncate block">Ver Perfil</span>
+                            </div>
+                        </a>
+
+                        <!-- Botón Correo -->
+                        <a href="mailto:Cristianramirez8537@gmail.com" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 text-slate-800 flex items-center gap-3 transition-all hover:shadow-md active:scale-95 group">
+                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform flex-shrink-0">
                                 <i class="bi bi-envelope-fill"></i>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Correo Electrónico</span>
-                                <a href="mailto:Cristianramirez8537@gmail.com" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-blue-600 transition-colors break-all">
-                                    Cristianramirez8537@gmail.com
-                                </a>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Correo</span>
+                                <span class="text-xs font-bold text-slate-900 truncate block">Enviar Mensaje</span>
                             </div>
-                        </div>
+                        </a>
 
-                        <!-- Teléfono -->
-                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg flex-shrink-0">
-                                <i class="bi bi-telephone-fill"></i>
+                        <!-- Botón Celular / WhatsApp -->
+                        <a href="https://wa.me/573188145842" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200/80 hover:border-emerald-200 text-slate-800 flex items-center gap-3 transition-all hover:shadow-md active:scale-95 group">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform flex-shrink-0">
+                                <i class="bi bi-whatsapp"></i>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Teléfono / Celular</span>
-                                <a href="tel:+573188145842" class="text-xs sm:text-sm font-bold text-slate-900 hover:text-emerald-600 transition-colors">
-                                    +57 318 814 5842
-                                </a>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Celular</span>
+                                <span class="text-xs font-bold text-slate-900 truncate block">+57 318 814 5842</span>
                             </div>
-                        </div>
+                        </a>
 
-                        <!-- Ubicación -->
-                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3.5">
-                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg flex-shrink-0">
+                        <!-- Botón Ubicación -->
+                        <a href="https://maps.google.com/?q=Campoalegre,Huila,Colombia" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-amber-50/70 border border-slate-200/80 hover:border-amber-200 text-slate-800 flex items-center gap-3 transition-all hover:shadow-md active:scale-95 group">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform flex-shrink-0">
                                 <i class="bi bi-geo-alt-fill"></i>
                             </div>
                             <div class="min-w-0">
-                                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Ubicación</span>
-                                <p class="text-xs sm:text-sm font-bold text-slate-900">
-                                    Campoalegre, Huila, Colombia
-                                </p>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Ubicación</span>
+                                <span class="text-xs font-bold text-slate-900 truncate block">Campoalegre, Huila</span>
                             </div>
-                        </div>
+                        </a>
 
                     </div>
                 </div>
