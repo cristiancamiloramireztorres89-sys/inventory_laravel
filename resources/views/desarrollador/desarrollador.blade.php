@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desarrollador | Cristian Ramírez - Inventory System</title>
+    <title>Desarrollador | Cristian Camilo Ramírez Torres - Inventory System</title>
 
     {{-- Favicon Oficial Inventory System --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}?v=2">
@@ -11,7 +11,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -29,34 +29,30 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-slate-900 selection:text-white min-h-screen flex flex-col">
+<body class="bg-slate-50/70 text-slate-800 font-sans antialiased selection:bg-slate-900 selection:text-white min-h-screen flex flex-col justify-between">
 
-    <!-- Header Navigation -->
-    <header class="sticky top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-[68px] flex items-center justify-between">
-            
-            <a href="{{ url('/') }}" class="flex items-center gap-2.5 sm:gap-3 group">
-                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-105 transition-transform">
+    <!-- Header Navigation Minimalista -->
+    <header class="sticky top-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-[64px] flex items-center justify-between">
+            <a href="{{ url('/') }}" class="flex items-center gap-2.5 group">
+                <div class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center text-sm shadow-xs group-hover:scale-105 transition-transform">
                     <i class="bi bi-box-seam-fill"></i>
                 </div>
-                <div class="flex flex-col leading-none">
-                    <span class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Inventory <span class="text-slate-500">System</span></span>
-                    <span class="text-[9px] sm:text-[10px] text-slate-400 font-semibold tracking-wider uppercase mt-0.5">Gestión Inteligente</span>
-                </div>
+                <span class="text-sm font-bold text-slate-900 tracking-tight">Inventory <span class="text-slate-500">System</span></span>
             </a>
 
             <div class="flex items-center gap-2 sm:gap-3">
-                <a href="{{ url('/') }}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 transition-colors">
-                    <i class="bi bi-arrow-left text-slate-900"></i>
+                <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 transition-colors">
+                    <i class="bi bi-arrow-left"></i>
                     <span>Volver al Inicio</span>
                 </a>
 
                 @auth
-                    <a href="{{ auth()->user()->esAdmin() ? route('admin.dashboard') : route('vendedor.dashboard') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors">
+                    <a href="{{ auth()->user()->esAdmin() ? route('admin.dashboard') : route('vendedor.dashboard') }}" class="hidden xs:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-colors">
                         <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors">
+                    <a href="{{ route('login') }}" class="hidden xs:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-colors">
                         <i class="bi bi-box-arrow-in-right"></i> Acceder
                     </a>
                 @endauth
@@ -64,186 +60,98 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-1 py-10 sm:py-16">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Main Content: Tarjeta Minimalista de Perfil -->
+    <main class="flex-1 flex items-center justify-center p-4 sm:p-8">
+        <div class="w-full max-w-[410px] bg-white rounded-[32px] border border-slate-200/90 shadow-xl p-7 sm:p-9 flex flex-col items-center text-center transition-all hover:shadow-2xl">
+            
+            <!-- Foto de Perfil con esquinas redondeadas -->
+            <div class="w-40 h-48 sm:w-44 sm:h-52 rounded-3xl overflow-hidden shadow-sm border border-slate-100 mb-5 flex-shrink-0 bg-slate-100">
+                <img src="{{ asset('img/cristian_ramirez.png') }}" 
+                     alt="Cristian Camilo Ramírez Torres" 
+                     class="w-full h-full object-cover">
+            </div>
 
-            <!-- Hero Perfil Card -->
-            <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden mb-8">
+            <!-- Nombre -->
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight leading-snug">
+                Cristian Camilo Ramírez Torres
+            </h1>
+
+            <!-- Subtítulo / Rol -->
+            <p class="text-sm font-bold text-sky-800 tracking-wide mt-1.5 mb-3.5">
+                Líder Full-Stack
+            </p>
+
+            <!-- Descripción de funciones / Liderazgo -->
+            <p class="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal mb-6 px-1">
+                Liderazgo técnico, diseño de arquitectura, base de datos, desarrollo backend, estructuracion de controladores, verificacion y autenticacion y apoyo en liderazgo.
+            </p>
+
+            <!-- Etiquetas / Habilidades (Tags Pills) -->
+            <div class="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-6">
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">MVC</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">Backend</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">Frontend</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">Laravel</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">Base de datos</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">Tailwind</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">Controladores</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">Liderazgo</span>
+                <span class="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">UI / UX</span>
+            </div>
+
+            <!-- Línea Separadora -->
+            <div class="w-full border-t border-slate-100 mb-5"></div>
+
+            <!-- Botones de Redes Sociales y Contacto Circulares -->
+            <div class="flex items-center justify-center gap-3">
                 
-                <!-- Portada decorativa oscura -->
-                <div class="h-36 sm:h-44 bg-slate-900 relative overflow-hidden flex items-center justify-between px-6 sm:px-10">
-                    <div class="absolute -right-10 -bottom-10 w-60 h-60 rounded-full bg-slate-800/60 pointer-events-none"></div>
-                    <div class="absolute left-10 -top-10 w-40 h-40 rounded-full bg-slate-800/40 pointer-events-none"></div>
-
-                    <div class="relative z-10">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-slate-200">
-                            <i class="bi bi-code-slash text-emerald-400"></i> Perfil Profesional
-                        </span>
-                        <h1 class="text-xl sm:text-2xl font-bold text-white mt-2">Información del Desarrollador</h1>
-                    </div>
-
-                    <div class="hidden sm:flex w-12 h-12 rounded-2xl bg-white/10 border border-white/15 text-white items-center justify-center text-2xl relative z-10">
-                        <i class="bi bi-terminal"></i>
-                    </div>
-                </div>
-
-                <!-- Info Principal con Avatar -->
-                <div class="px-6 sm:px-10 pb-8 relative pt-14 sm:pt-16">
-                    
-                    <!-- Avatar flotante -->
-                    <div class="absolute -top-12 left-6 sm:left-10 w-24 h-24 rounded-2xl bg-slate-900 text-white border-4 border-white shadow-xl flex items-center justify-center text-3xl font-extrabold tracking-wider">
-                        CR
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-100">
-                        <div>
-                            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Cristian Ramírez</h2>
-                            <p class="text-sm font-medium text-slate-500 mt-0.5">Desarrollador de Software & Creador de Inventory System</p>
-                        </div>
-
-                        <!-- Estado de disponibilidad -->
-                        <div class="flex items-center gap-2">
-                            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold shadow-xs">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                Disponible
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Botones de Acción Directa (GitHub, Correo, Celular, Ubicación) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-6">
-                        
-                        <!-- Botón GitHub -->
-                        <a href="https://github.com/cristiancamiloramireztorres89-sys/inventory_laravel" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white flex items-center gap-3 transition-all hover:shadow-md active:scale-95 group">
-                            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-xl text-white group-hover:scale-110 transition-transform flex-shrink-0">
-                                <i class="bi bi-github"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">GitHub</span>
-                                <span class="text-xs font-bold text-white truncate block">Ver Perfil</span>
-                            </div>
-                        </a>
-
-                        <!-- Botón Correo -->
-                        <a href="mailto:Cristianramirez8537@gmail.com" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 text-slate-800 flex items-center gap-3 transition-all hover:shadow-md active:scale-95 group">
-                            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform flex-shrink-0">
-                                <i class="bi bi-envelope-fill"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Correo</span>
-                                <span class="text-xs font-bold text-slate-900 truncate block">Enviar Mensaje</span>
-                            </div>
-                        </a>
-
-                        <!-- Botón Celular / WhatsApp -->
-                        <a href="https://wa.me/573188145842" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-emerald-50/70 border border-slate-200/80 hover:border-emerald-200 text-slate-800 flex items-center gap-3 transition-all hover:shadow-md active:scale-95 group">
-                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform flex-shrink-0">
-                                <i class="bi bi-whatsapp"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Celular</span>
-                                <span class="text-xs font-bold text-slate-900 truncate block">+57 318 814 5842</span>
-                            </div>
-                        </a>
-
-                        <!-- Botón Ubicación -->
-                        <a href="https://maps.google.com/?q=Campoalegre,Huila,Colombia" target="_blank" rel="noopener noreferrer" class="p-3.5 rounded-2xl bg-slate-50 hover:bg-amber-50/70 border border-slate-200/80 hover:border-amber-200 text-slate-800 flex items-center gap-3 transition-all hover:shadow-md active:scale-95 group">
-                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg group-hover:scale-110 transition-transform flex-shrink-0">
-                                <i class="bi bi-geo-alt-fill"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Ubicación</span>
-                                <span class="text-xs font-bold text-slate-900 truncate block">Campoalegre, Huila</span>
-                            </div>
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ficha Técnica del Proyecto & Stack -->
-            <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-10 mb-8">
-                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                    <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-base">
-                        <i class="bi bi-layers-fill"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900">Stack Tecnológico del Proyecto</h3>
-                        <p class="text-xs text-slate-500">Herramientas y tecnologías utilizadas en el desarrollo de Inventory System</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                    
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
-                        <i class="bi bi-filetype-php text-2xl text-indigo-600 mb-2 block"></i>
-                        <span class="text-xs font-bold text-slate-900 block">Laravel 11</span>
-                        <span class="text-[10px] text-slate-500">Backend & MVC</span>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
-                        <i class="bi bi-database text-2xl text-blue-600 mb-2 block"></i>
-                        <span class="text-xs font-bold text-slate-900 block">TiDB Cloud / MySQL</span>
-                        <span class="text-[10px] text-slate-500">Base de Datos</span>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
-                        <i class="bi bi-palette text-2xl text-teal-600 mb-2 block"></i>
-                        <span class="text-xs font-bold text-slate-900 block">Tailwind CSS</span>
-                        <span class="text-[10px] text-slate-500">Diseño Responsivo</span>
-                    </div>
-
-                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
-                        <i class="bi bi-shield-check text-2xl text-emerald-600 mb-2 block"></i>
-                        <span class="text-xs font-bold text-slate-900 block">Brevo API HTTPS</span>
-                        <span class="text-[10px] text-slate-500">Correos & Seguridad</span>
-                    </div>
-
-                </div>
-
-                <!-- Detalle de Funcionalidades implementadas -->
-                <div class="mt-6 pt-6 border-t border-slate-100">
-                    <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Módulos Desarrollados</h4>
-                    <div class="flex flex-wrap gap-2 text-xs">
-                        <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-semibold flex items-center gap-1.5">
-                            <i class="bi bi-box-seam text-slate-900"></i> Gestión de Productos & Stock
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-semibold flex items-center gap-1.5">
-                            <i class="bi bi-cash-stack text-slate-900"></i> Punto de Venta & Facturación POS
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-semibold flex items-center gap-1.5">
-                            <i class="bi bi-truck text-slate-900"></i> Compras & Directorio de Proveedores
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-semibold flex items-center gap-1.5">
-                            <i class="bi bi-people text-slate-900"></i> Roles & Permisos (Admin y Vendedor)
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-semibold flex items-center gap-1.5">
-                            <i class="bi bi-file-earmark-pdf text-slate-900"></i> Exportación en PDF con DomPDF
-                        </span>
-                        <span class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-semibold flex items-center gap-1.5">
-                            <i class="bi bi-key text-slate-900"></i> Recuperación de Cuenta con Código de 6 Dígitos
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Acciones de Navegación Finales -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="{{ url('/') }}" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
-                    <i class="bi bi-house"></i> Volver a la Página Principal
+                <!-- GitHub -->
+                <a href="https://github.com/cristiancamiloramireztorres89-sys/inventory_laravel" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   title="GitHub" 
+                   class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-900 hover:text-white text-slate-700 flex items-center justify-center text-base transition-all active:scale-95 shadow-xs">
+                    <i class="bi bi-github"></i>
                 </a>
-                <a href="{{ route('login') }}" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2">
-                    <i class="bi bi-box-arrow-in-right"></i> Ir a Iniciar Sesión
+
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   title="LinkedIn" 
+                   class="w-10 h-10 rounded-full bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 flex items-center justify-center text-base transition-all active:scale-95 shadow-xs">
+                    <i class="bi bi-linkedin"></i>
                 </a>
+
+                <!-- WhatsApp -->
+                <a href="https://wa.me/573188145842" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   title="WhatsApp (+57 318 814 5842)" 
+                   class="w-10 h-10 rounded-full bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 flex items-center justify-center text-base transition-all active:scale-95 shadow-xs">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+
+                <!-- Email -->
+                <a href="mailto:Cristianramirez8537@gmail.com" 
+                   title="Correo (Cristianramirez8537@gmail.com)" 
+                   class="w-10 h-10 rounded-full bg-slate-100 hover:bg-blue-500 hover:text-white text-slate-700 flex items-center justify-center text-base transition-all active:scale-95 shadow-xs">
+                    <i class="bi bi-envelope-fill"></i>
+                </a>
+
             </div>
+
+            <!-- Institución al pie de la tarjeta -->
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mt-6">
+                SENA CEFA
+            </p>
 
         </div>
     </main>
 
     <!-- Footer Simple -->
-    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
-        <p>&copy; {{ date('Y') }} Inventory System &bull; Creado por <strong>Cristian Ramírez</strong> &bull; Campoalegre, Huila, Colombia.</p>
+    <footer class="py-4 text-center text-xs text-slate-400">
+        <p>&copy; {{ date('Y') }} Inventory System &bull; Campoalegre, Huila, Colombia</p>
     </footer>
 
 </body>
