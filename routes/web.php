@@ -26,38 +26,6 @@ Route::get('/', function () {
 // Rutas de Autenticación
 require __DIR__.'/auth.php';
 
-Route::get('/test-mail', function () {
-    try {
-        $venta = \App\Models\Venta::with(['usuario', 'cliente', 'detalles.producto'])->latest('id_venta')->first();
-        if (!$venta) {
-            return response()->json(['error' => 'No hay ventas registradas'], 404);
-        }
-
-        $correo = (!empty($venta->cliente) && !empty($venta->cliente->correo))
-            ? $venta->cliente->correo
-            : 'cristiancamiloramireztorres89@gmail.com';
-
-        $pdfContent = \Barryvdh\DomPDF\Facade\Pdf::loadView('ventas.factura_pos_pdf', ['venta' => $venta])
-            ->setPaper([0, 0, 226.77, 550], 'portrait')
-            ->output();
-
-        \Illuminate\Support\Facades\Mail::to($correo)
-            ->send(new \App\Mail\FacturaVentaMail($venta, $pdfContent));
-
-        return response()->json([
-            'status' => 'success',
-            'message' => "Factura de venta #{$venta->id_venta} enviada con PDF a {$correo}",
-            'pdf_bytes' => strlen($pdfContent),
-        ]);
-    } catch (\Throwable $e) {
-        return response()->json([
-            'status' => 'error',
-            'error_message' => $e->getMessage(),
-            'error_class' => get_class($e),
-        ], 500);
-    }
-});
-
 // Rutas del Panel Administrador (Protegidas por Auth y Rol Administrador)
 Route::middleware(['auth', 'role:administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
