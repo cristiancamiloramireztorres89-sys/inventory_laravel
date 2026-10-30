@@ -26,6 +26,38 @@ Route::get('/', function () {
 // Rutas de Autenticación
 require __DIR__.'/auth.php';
 
+Route::get('/test-mail', function () {
+    $mailConfig = [
+        'default' => config('mail.default'),
+        'host' => config('mail.mailers.smtp.host'),
+        'port' => config('mail.mailers.smtp.port'),
+        'username' => config('mail.mailers.smtp.username'),
+        'has_password' => !empty(config('mail.mailers.smtp.password')),
+        'encryption' => config('mail.mailers.smtp.encryption'),
+        'from_address' => config('mail.from.address'),
+    ];
+
+    try {
+        \Illuminate\Support\Facades\Mail::raw('Prueba de correo desde Render', function ($m) {
+            $m->to('cristiancamiloramireztorres89@gmail.com')
+              ->subject('Prueba de correo desde Render');
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Correo enviado exitosamente a cristiancamiloramireztorres89@gmail.com',
+            'config' => $mailConfig,
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'error_message' => $e->getMessage(),
+            'error_class' => get_class($e),
+            'config' => $mailConfig,
+        ], 500);
+    }
+});
+
 // Rutas del Panel Administrador (Protegidas por Auth y Rol Administrador)
 Route::middleware(['auth', 'role:administrador'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
