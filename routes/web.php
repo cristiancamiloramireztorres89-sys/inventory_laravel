@@ -23,6 +23,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/desarrollador', function () {
+    return view('desarrollador.desarrollador');
+})->name('desarrollador');
+
 // Rutas de Autenticación
 require __DIR__.'/auth.php';
 

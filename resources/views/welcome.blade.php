@@ -114,9 +114,9 @@
 
             <!-- Botones de Acción Derecha -->
             <div class="flex items-center gap-2 sm:gap-3">
-                <button onclick="openDevModal()" class="hidden lg:inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 transition-colors">
+                <a href="{{ route('desarrollador') }}" class="hidden lg:inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-semibold text-slate-700 transition-colors">
                     <i class="bi bi-code-slash text-slate-900"></i> Desarrollador
-                </button>
+                </a>
 
                 @auth
                     <a href="{{ auth()->user()->esAdmin() ? route('admin.dashboard') : route('vendedor.dashboard') }}" class="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-sm transition-colors active:scale-95">
@@ -157,9 +157,9 @@
             </a>
             
             <div class="pt-3 border-t border-slate-100 grid grid-cols-2 gap-2">
-                <button onclick="openDevModal()" class="py-2.5 px-3 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold text-center hover:bg-slate-200 transition-colors flex items-center justify-center gap-1.5">
+                <a href="{{ route('desarrollador') }}" class="py-2.5 px-3 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold text-center hover:bg-slate-200 transition-colors flex items-center justify-center gap-1.5">
                     <i class="bi bi-code-slash"></i> Desarrollador
-                </button>
+                </a>
                 @auth
                     <a href="{{ auth()->user()->esAdmin() ? route('admin.dashboard') : route('vendedor.dashboard') }}" class="py-2.5 px-3 rounded-xl bg-slate-900 text-white text-center text-xs font-semibold shadow hover:bg-slate-800 transition-colors flex items-center justify-center gap-1.5">
                         <i class="bi bi-speedometer2"></i> Dashboard
@@ -446,24 +446,6 @@
         @include('componentes.footer-landing')
     </div>
 
-    <!-- Modal Desarrollador -->
-    <div id="devModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-slate-800 shadow-2xl border border-slate-200">
-            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="bi bi-code-slash text-slate-900"></i> Desarrollador</h3>
-                <button onclick="closeDevModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
-                    <i class="bi bi-x-lg text-sm"></i>
-                </button>
-            </div>
-            <div class="space-y-2.5 text-xs text-slate-600">
-                <p><strong>Desarrollador:</strong> Cristian Ramírez</p>
-                <p><strong>Email:</strong> Cristianramirez8537@gmail.com</p>
-                <p><strong>Teléfono:</strong> +57 3188145842</p>
-                <p><strong>Ubicación:</strong> Campoalegre, Huila, Colombia</p>
-            </div>
-            <button onclick="closeDevModal()" class="mt-5 w-full py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-colors">Cerrar</button>
-        </div>
-    </div>
 
     <!-- Script Slider & Modal con Soporte Táctil (Swipe Móvil) -->
     <script>
@@ -529,8 +511,6 @@
             }
         }
 
-        function openDevModal() { document.getElementById('devModal').classList.remove('hidden'); }
-        function closeDevModal() { document.getElementById('devModal').classList.add('hidden'); }
 
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
