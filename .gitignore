@@ -39,3 +39,4 @@ public/uploads/usuarios/*
 !public/uploads/usuarios/.gitkeep
 public/uploads/productos/*
 !public/uploads/productos/.gitkeep
+*.sql

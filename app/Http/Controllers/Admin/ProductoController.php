@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Categoria;
 use App\Models\Producto;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -52,14 +53,7 @@ class ProductoController extends Controller
 
         $nombreImagen = null;
         if ($request->hasFile('imagen')) {
-            $destino = public_path('uploads/productos');
-            if (! file_exists($destino)) {
-                mkdir($destino, 0755, true);
-            }
-
-            $file = $request->file('imagen');
-            $nombreImagen = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($destino, $nombreImagen);
+            $nombreImagen = ImageService::processToBase64($request->file('imagen'), 600, 600, 82);
         }
 
         Producto::create([
@@ -117,19 +111,14 @@ class ProductoController extends Controller
         ];
 
         if ($request->hasFile('imagen')) {
-            $destino = public_path('uploads/productos');
-            if (! file_exists($destino)) {
-                mkdir($destino, 0755, true);
+            if ($producto->imagen && ! str_starts_with($producto->imagen, 'data:image')) {
+                $archivoPrevio = public_path('uploads/productos/' . $producto->imagen);
+                if (file_exists($archivoPrevio)) {
+                    @unlink($archivoPrevio);
+                }
             }
 
-            if ($producto->imagen && file_exists($destino . '/' . $producto->imagen)) {
-                @unlink($destino . '/' . $producto->imagen);
-            }
-
-            $file = $request->file('imagen');
-            $nombreImagen = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($destino, $nombreImagen);
-            $data['imagen'] = $nombreImagen;
+            $data['imagen'] = ImageService::processToBase64($request->file('imagen'), 600, 600, 82);
         }
 
         $producto->update($data);
@@ -165,8 +154,11 @@ class ProductoController extends Controller
                 ->with('error', 'No se puede eliminar físicamente el producto porque tiene compras o ventas registradas. Te recomendamos usar la opción de "Desactivar Producto".');
         }
 
-        if ($producto->imagen && file_exists(public_path('uploads/productos/' . $producto->imagen))) {
-            @unlink(public_path('uploads/productos/' . $producto->imagen));
+        if ($producto->imagen && ! str_starts_with($producto->imagen, 'data:image')) {
+            $archivo = public_path('uploads/productos/' . $producto->imagen);
+            if (file_exists($archivo)) {
+                @unlink($archivo);
+            }
         }
 
         $producto->delete();

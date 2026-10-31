@@ -57,7 +57,15 @@ class Producto extends Model
      */
     public function getImagenUrlAttribute(): ?string
     {
-        if ($this->imagen && file_exists(public_path('uploads/productos/' . $this->imagen))) {
+        if (! $this->imagen) {
+            return null;
+        }
+
+        if (str_starts_with($this->imagen, 'data:image') || filter_var($this->imagen, FILTER_VALIDATE_URL)) {
+            return $this->imagen;
+        }
+
+        if (file_exists(public_path('uploads/productos/' . $this->imagen))) {
             return asset('uploads/productos/' . $this->imagen);
         }
 

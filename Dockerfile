@@ -57,6 +57,6 @@ RUN mkdir -p storage/framework/cache \
     && chown -R www-data:www-data storage bootstrap/cache public/uploads \
     && chmod -R 775 storage bootstrap/cache public/uploads
 
-# Configurar Apache para escuchar en el puerto dinámico de Render ($PORT o 80) y asegurar permisos en runtime
-CMD sh -c "sed -i 's/80/'\${PORT:-80}'/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && chmod -R 777 storage bootstrap/cache && apache2-foreground"
+# Configurar Apache para escuchar en el puerto dinámico de Render ($PORT o 80), ejecutar migraciones y asegurar permisos en runtime
+CMD sh -c "sed -i 's/80/'\${PORT:-80}'/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf && chmod -R 777 storage bootstrap/cache && php artisan migrate --force && apache2-foreground"
 

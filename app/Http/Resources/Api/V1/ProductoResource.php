@@ -14,11 +14,7 @@ class ProductoResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $baseUrl = $request->getSchemeAndHttpHost();
-        $imagenUrl = null;
-        if ($this->imagen) {
-            $imagenUrl = $baseUrl . '/uploads/productos/' . $this->imagen;
-        }
+        $imagenUrl = $this->imagen_url;
 
         return [
             'id_producto' => (int) $this->id_producto,

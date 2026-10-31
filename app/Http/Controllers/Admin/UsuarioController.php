@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Usuario;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,14 +54,7 @@ class UsuarioController extends Controller
 
         $nombreFoto = null;
         if ($request->hasFile('foto')) {
-            $destino = public_path('uploads/usuarios');
-            if (! file_exists($destino)) {
-                mkdir($destino, 0755, true);
-            }
-
-            $file = $request->file('foto');
-            $nombreFoto = 'avatar_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($destino, $nombreFoto);
+            $nombreFoto = ImageService::processToBase64($request->file('foto'), 400, 400, 82);
         }
 
         Usuario::create([
@@ -109,19 +103,14 @@ class UsuarioController extends Controller
         }
 
         if ($request->hasFile('foto')) {
-            $destino = public_path('uploads/usuarios');
-            if (! file_exists($destino)) {
-                mkdir($destino, 0755, true);
+            if ($usuario->foto && ! str_starts_with($usuario->foto, 'data:image')) {
+                $archivoPrevio = public_path('uploads/usuarios/' . $usuario->foto);
+                if (file_exists($archivoPrevio)) {
+                    @unlink($archivoPrevio);
+                }
             }
 
-            if ($usuario->foto && file_exists($destino . '/' . $usuario->foto)) {
-                @unlink($destino . '/' . $usuario->foto);
-            }
-
-            $file = $request->file('foto');
-            $nombreFoto = 'avatar_' . $usuario->id_usuario . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move($destino, $nombreFoto);
-            $data['foto'] = $nombreFoto;
+            $data['foto'] = ImageService::processToBase64($request->file('foto'), 400, 400, 82);
         }
 
         $usuario->update($data);
@@ -181,9 +170,12 @@ class UsuarioController extends Controller
                 ->with('error', "No se puede eliminar a '{$usuario->nombre}' porque tiene {$detalle} asociadas en el historial. Puedes desactivar su cuenta para revocarle el acceso.");
         }
 
-        // 3. Eliminar foto física del disco si existe
-        if ($usuario->foto && file_exists(public_path('uploads/usuarios/' . $usuario->foto))) {
-            @unlink(public_path('uploads/usuarios/' . $usuario->foto));
+        // 3. Eliminar foto física del disco si era archivo local
+        if ($usuario->foto && ! str_starts_with($usuario->foto, 'data:image')) {
+            $archivo = public_path('uploads/usuarios/' . $usuario->foto);
+            if (file_exists($archivo)) {
+                @unlink($archivo);
+            }
         }
 
         // 4. Eliminar usuario de la base de datos

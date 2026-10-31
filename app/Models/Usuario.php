@@ -115,7 +115,15 @@ class Usuario extends Authenticatable
      */
     public function getFotoUrlAttribute(): ?string
     {
-        if ($this->foto && file_exists(public_path('uploads/usuarios/' . $this->foto))) {
+        if (! $this->foto) {
+            return null;
+        }
+
+        if (str_starts_with($this->foto, 'data:image') || filter_var($this->foto, FILTER_VALIDATE_URL)) {
+            return $this->foto;
+        }
+
+        if (file_exists(public_path('uploads/usuarios/' . $this->foto))) {
             return asset('uploads/usuarios/' . $this->foto);
         }
 

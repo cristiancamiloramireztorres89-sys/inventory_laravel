@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -54,20 +55,16 @@ class PerfilController extends Controller
 
         // Procesar subida de foto de perfil
         if ($request->hasFile('foto')) {
-            $destino = public_path('uploads/usuarios');
-            if (! file_exists($destino)) {
-                mkdir($destino, 0755, true);
+            // Eliminar archivo local previo si era un archivo físico
+            if ($usuario->foto && ! str_starts_with($usuario->foto, 'data:image')) {
+                $archivoPrevio = public_path('uploads/usuarios/' . $usuario->foto);
+                if (file_exists($archivoPrevio)) {
+                    @unlink($archivoPrevio);
+                }
             }
 
-            // Eliminar foto previa si existía
-            if ($usuario->foto && file_exists($destino . '/' . $usuario->foto)) {
-                @unlink($destino . '/' . $usuario->foto);
-            }
-
-            $file = $request->file('foto');
-            $nombreFoto = 'avatar_' . $usuario->id_usuario . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move($destino, $nombreFoto);
-            $data['foto'] = $nombreFoto;
+            // Procesar y comprimir la imagen en Data URI Base64 persistente
+            $data['foto'] = ImageService::processToBase64($request->file('foto'), 400, 400, 82);
         }
 
         $usuario->update($data);
@@ -118,9 +115,11 @@ class PerfilController extends Controller
         $usuario = Auth::user();
 
         if ($usuario->foto) {
-            $archivo = public_path('uploads/usuarios/' . $usuario->foto);
-            if (file_exists($archivo)) {
-                @unlink($archivo);
+            if (! str_starts_with($usuario->foto, 'data:image')) {
+                $archivo = public_path('uploads/usuarios/' . $usuario->foto);
+                if (file_exists($archivo)) {
+                    @unlink($archivo);
+                }
             }
 
             $usuario->update(['foto' => null]);

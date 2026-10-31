@@ -108,7 +108,12 @@
                                 <div class="flex items-center justify-end gap-1">
                                     {{-- Botón Editar --}}
                                     <button type="button" title="Editar usuario"
-                                        onclick="abrirModalEditar({{ $usuario->id_usuario }}, '{{ addslashes($usuario->nombre) }}', '{{ addslashes($usuario->correo) }}', {{ $usuario->id_rol }}, '{{ $usuario->foto_url ?? '' }}')"
+                                        data-id="{{ $usuario->id_usuario }}"
+                                        data-nombre="{{ $usuario->nombre }}"
+                                        data-correo="{{ $usuario->correo }}"
+                                        data-rol="{{ $usuario->id_rol }}"
+                                        data-foto="{{ $usuario->foto_url ?? '' }}"
+                                        onclick="abrirModalEditar(this)"
                                         class="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer text-sm">
                                         <i class="bi bi-pencil"></i>
                                     </button>
@@ -471,7 +476,16 @@
     }
 
     // Modal Editar
-    function abrirModalEditar(id, nombre, correo, idRol, fotoUrl) {
+    function abrirModalEditar(btnOrId, nombre, correo, idRol, fotoUrl) {
+        let id = btnOrId;
+        if (typeof btnOrId === 'object' && btnOrId !== null) {
+            id = btnOrId.getAttribute('data-id');
+            nombre = btnOrId.getAttribute('data-nombre');
+            correo = btnOrId.getAttribute('data-correo');
+            idRol = btnOrId.getAttribute('data-rol');
+            fotoUrl = btnOrId.getAttribute('data-foto');
+        }
+
         const form = document.getElementById('formEditar');
         form.action = `/admin/usuarios/${id}`;
         document.getElementById('edit_nombre').value = nombre;

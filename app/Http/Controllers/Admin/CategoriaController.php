@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Categoria;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -39,14 +40,7 @@ class CategoriaController extends Controller
 
         $nombreImagen = null;
         if ($request->hasFile('imagen')) {
-            $destino = public_path('uploads/categorias');
-            if (! file_exists($destino)) {
-                mkdir($destino, 0755, true);
-            }
-
-            $file = $request->file('imagen');
-            $nombreImagen = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($destino, $nombreImagen);
+            $nombreImagen = ImageService::processToBase64($request->file('imagen'), 600, 600, 82);
         }
 
         Categoria::create([
@@ -82,19 +76,14 @@ class CategoriaController extends Controller
         ];
 
         if ($request->hasFile('imagen')) {
-            $destino = public_path('uploads/categorias');
-            if (! file_exists($destino)) {
-                mkdir($destino, 0755, true);
+            if ($categoria->imagen && ! str_starts_with($categoria->imagen, 'data:image')) {
+                $archivoPrevio = public_path('uploads/categorias/' . $categoria->imagen);
+                if (file_exists($archivoPrevio)) {
+                    @unlink($archivoPrevio);
+                }
             }
 
-            if ($categoria->imagen && file_exists($destino . '/' . $categoria->imagen)) {
-                @unlink($destino . '/' . $categoria->imagen);
-            }
-
-            $file = $request->file('imagen');
-            $nombreImagen = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move($destino, $nombreImagen);
-            $data['imagen'] = $nombreImagen;
+            $data['imagen'] = ImageService::processToBase64($request->file('imagen'), 600, 600, 82);
         }
 
         $categoria->update($data);
@@ -113,8 +102,11 @@ class CategoriaController extends Controller
                 ->with('error', 'No se puede eliminar la categoría porque contiene productos asociados.');
         }
 
-        if ($categoria->imagen && file_exists(public_path('uploads/categorias/' . $categoria->imagen))) {
-            @unlink(public_path('uploads/categorias/' . $categoria->imagen));
+        if ($categoria->imagen && ! str_starts_with($categoria->imagen, 'data:image')) {
+            $archivo = public_path('uploads/categorias/' . $categoria->imagen);
+            if (file_exists($archivo)) {
+                @unlink($archivo);
+            }
         }
 
         $categoria->delete();
