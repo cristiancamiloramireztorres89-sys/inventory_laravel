@@ -4,7 +4,8 @@
     $currentRoute = request()->route()?->getName();
 @endphp
 
-<aside id="appSidebar" class="w-64 h-screen sticky top-0 z-40 flex-shrink-0 flex flex-col select-none border-r border-white/[0.08]"
+<aside id="appSidebar"
+       class="fixed lg:sticky inset-y-0 left-0 z-50 lg:z-40 w-72 lg:w-64 h-screen h-[100dvh] flex-shrink-0 flex flex-col select-none border-r border-white/[0.08] -translate-x-full lg:translate-x-0 transition-transform lg:transition-[width] duration-300 ease-in-out shadow-2xl lg:shadow-none"
        style="background: #0d1117;">
 
     {{-- 1. Logo Original Pulido con Botón de Colapso Elegante --}}
@@ -19,15 +20,24 @@
                 <p class="text-[11px] font-bold tracking-widest uppercase" style="color: #4b6280;">System</p>
             </div>
         </div>
+
+        {{-- Botón colapso en escritorio (lg+) --}}
         <button id="btnToggleSidebar" type="button" onclick="toggleSidebar()"
                 title="Plegar / Expandir menú lateral"
-                class="w-8 h-8 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] hover:border-white/[0.18] text-slate-400 hover:text-white flex items-center justify-center transition-all cursor-pointer flex-shrink-0 shadow-2xs active:scale-95">
+                class="hidden lg:flex w-8 h-8 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] hover:border-white/[0.18] text-slate-400 hover:text-white items-center justify-center transition-all cursor-pointer flex-shrink-0 shadow-2xs active:scale-95">
             <i id="iconoSidebar" class="bi bi-layout-sidebar-inset-reverse text-sm"></i>
+        </button>
+
+        {{-- Botón cerrar en móvil (< lg) --}}
+        <button type="button" onclick="cerrarSidebarMobile()"
+                title="Cerrar menú lateral"
+                class="lg:hidden w-8 h-8 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.08] hover:border-white/[0.18] text-slate-400 hover:text-white flex items-center justify-center transition-all cursor-pointer flex-shrink-0 active:scale-95">
+            <i class="bi bi-x-lg text-sm"></i>
         </button>
     </div>
 
     {{-- 2. Contenido del Navegador con Logos y Tooltips --}}
-    <nav class="flex-1 px-3.5 py-4 space-y-5 overflow-y-auto overflow-x-hidden">
+    <nav class="flex-1 min-h-0 px-3.5 py-4 space-y-5 overflow-y-auto overflow-x-hidden">
 
         {{-- SECCIÓN: PRINCIPAL --}}
         <div>
@@ -196,8 +206,9 @@
 
     </nav>
 
-    {{-- 3. Usuario Logueado Abajo --}}
-    <div class="sidebar-user-box px-3 py-3 border-t border-white/[0.08]">
+    {{-- 3. Usuario Logueado Abajo (Siempre fijo y visible) --}}
+    <div class="sidebar-user-box px-3 py-3 border-t border-white/[0.08] mt-auto bg-[#0d1117] flex-shrink-0"
+         style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));">
         <div class="sidebar-user-wrapper flex items-center gap-2">
             <a href="{{ route('perfil') }}"
                class="flex items-center gap-2.5 flex-1 min-w-0 p-1.5 rounded-xl hover:bg-white/[0.06] transition-colors group"

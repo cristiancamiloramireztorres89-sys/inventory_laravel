@@ -18,67 +18,103 @@
     @endif
 
     <style>
-        #appSidebar {
-            transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 16rem;
-        }
-        #appSidebar.sidebar-collapsed {
-            width: 4.75rem !important; /* 76px */
-        }
-        #appSidebar.sidebar-collapsed .sidebar-text,
-        #appSidebar.sidebar-collapsed .sidebar-section-title,
-        #appSidebar.sidebar-collapsed .sidebar-label,
-        #appSidebar.sidebar-collapsed .sidebar-user-text {
-            display: none !important;
-        }
-        #appSidebar.sidebar-collapsed .sidebar-logo-box {
-            flex-direction: column !important;
-            justify-content: center !important;
-            align-items: center !important;
-            padding-left: 0.5rem !important;
-            padding-right: 0.5rem !important;
-            padding-top: 1rem !important;
-            padding-bottom: 0.875rem !important;
-            gap: 0.625rem !important;
-            min-height: auto !important;
-        }
-        #appSidebar.sidebar-collapsed .sidebar-logo-brand {
-            justify-content: center !important;
-            width: 100% !important;
-        }
-        #appSidebar.sidebar-collapsed .sidebar-link {
-            justify-content: center !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
-        }
-        #appSidebar.sidebar-collapsed .sidebar-user-wrapper {
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 0.5rem !important;
-        }
-        #appSidebar.sidebar-collapsed .sidebar-user-box {
-            padding-left: 0.5rem !important;
-            padding-right: 0.5rem !important;
+        @media (min-width: 1024px) {
+            #appSidebar {
+                transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+                width: 16rem;
+            }
+            #appSidebar.sidebar-collapsed {
+                width: 4.75rem !important; /* 76px */
+            }
+            #appSidebar.sidebar-collapsed .sidebar-text,
+            #appSidebar.sidebar-collapsed .sidebar-section-title,
+            #appSidebar.sidebar-collapsed .sidebar-label,
+            #appSidebar.sidebar-collapsed .sidebar-user-text {
+                display: none !important;
+            }
+            #appSidebar.sidebar-collapsed .sidebar-logo-box {
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+                padding-top: 1rem !important;
+                padding-bottom: 0.875rem !important;
+                gap: 0.625rem !important;
+                min-height: auto !important;
+            }
+            #appSidebar.sidebar-collapsed .sidebar-logo-brand {
+                justify-content: center !important;
+                width: 100% !important;
+            }
+            #appSidebar.sidebar-collapsed .sidebar-link {
+                justify-content: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+            #appSidebar.sidebar-collapsed .sidebar-user-wrapper {
+                flex-direction: column !important;
+                align-items: center !important;
+                gap: 0.5rem !important;
+            }
+            #appSidebar.sidebar-collapsed .sidebar-user-box {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen flex overflow-hidden">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased h-screen h-[100dvh] flex overflow-hidden">
 
-    {{-- Sidebar Fijo --}}
+    {{-- Backdrop oscuro para cerrar menú en móvil --}}
+    <div id="sidebarMobileBackdrop" onclick="cerrarSidebarMobile()"
+         class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity"></div>
+
+    {{-- Sidebar Fijo / Drawer --}}
     @include('componentes.sidebar')
 
     {{-- Área principal con scroll independiente --}}
-    <div class="flex-1 flex flex-col h-screen min-w-0 overflow-y-auto">
+    <div class="flex-1 flex flex-col h-screen h-[100dvh] min-w-0 overflow-y-auto">
 
-        {{-- Header top (Limpio y elegante) --}}
-        <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 flex-shrink-0 shadow-xs">
-            <div>
-                <h2 class="text-base font-black text-slate-900 tracking-tight leading-tight">@yield('page_title', 'Dashboard')</h2>
-                <p class="text-xs font-semibold text-slate-600 mt-0.5">@yield('page_subtitle', 'Panel de control')</p>
+        {{-- Header top (Limpio, responsive y elegante) --}}
+        <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3 flex items-center justify-between sticky top-0 z-30 flex-shrink-0 shadow-xs">
+            <div class="flex items-center gap-2.5 min-w-0">
+                {{-- Botón hamburguesa en móvil --}}
+                <button type="button" onclick="abrirSidebarMobile()"
+                        class="lg:hidden p-2 -ml-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer flex-shrink-0"
+                        title="Abrir menú de navegación">
+                    <i class="bi bi-list text-2xl leading-none"></i>
+                </button>
+                <div class="min-w-0">
+                    <h2 class="text-sm sm:text-base font-black text-slate-900 tracking-tight leading-tight truncate">@yield('page_title', 'Dashboard')</h2>
+                    <p class="text-[11px] sm:text-xs font-semibold text-slate-500 mt-0.5 truncate hidden sm:block">@yield('page_subtitle', 'Panel de control')</p>
+                </div>
             </div>
-            <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200/80 text-xs font-bold text-slate-700 shadow-2xs flex-shrink-0">
-                <i class="bi bi-calendar3 text-slate-600 text-xs"></i>
-                <span class="capitalize">{{ now()->locale('es')->isoFormat('dddd, D [de] MMMM YYYY') }}</span>
+
+            {{-- Lado derecho del header: En móvil muestra acceso directo a perfil y cerrar sesión, en desktop la fecha --}}
+            <div class="flex items-center gap-2 flex-shrink-0">
+                {{-- Móvil: Acceso directo a Perfil y Cerrar Sesión --}}
+                <div class="flex items-center gap-1.5 sm:hidden">
+                    <a href="{{ route('perfil') }}" title="Mi Perfil" class="p-0.5 rounded-full hover:ring-2 hover:ring-slate-300 transition-all flex items-center">
+                        @if(auth()->user()?->foto_url)
+                            <img src="{{ auth()->user()->foto_url }}" alt="{{ auth()->user()->nombre }}" class="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-2xs">
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-slate-900 text-white font-bold text-xs flex items-center justify-center shadow-2xs">
+                                {{ strtoupper(substr(auth()->user()?->nombre ?? 'U', 0, 1)) }}
+                            </div>
+                        @endif
+                    </a>
+                    <button type="button" onclick="abrirModalLogout()" title="Cerrar sesión"
+                            class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer">
+                        <i class="bi bi-box-arrow-right text-base"></i>
+                    </button>
+                </div>
+
+                {{-- Tablet / Desktop: Badge de Fecha --}}
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200/80 text-xs font-bold text-slate-700 shadow-2xs">
+                    <i class="bi bi-calendar3 text-slate-600 text-xs"></i>
+                    <span class="capitalize">{{ now()->locale('es')->isoFormat('dddd, D [de] MMMM YYYY') }}</span>
+                </div>
             </div>
         </header>
 
@@ -144,16 +180,52 @@
             dismissElement('flash-error-alert', 3000);
             dismissElement('flash-validation-errors', 3500);
 
-            // Restaurar estado del sidebar al cargar
-            if (localStorage.getItem('inventory_sidebar_collapsed') === 'true') {
+            // Restaurar estado del sidebar al cargar (solo en pantallas grandes)
+            if (window.innerWidth >= 1024 && localStorage.getItem('inventory_sidebar_collapsed') === 'true') {
                 const sb = document.getElementById('appSidebar');
                 const ic = document.getElementById('iconoSidebar');
                 if (sb) sb.classList.add('sidebar-collapsed');
                 if (ic) ic.className = 'bi bi-layout-sidebar-inset text-sm';
             }
+
+            // Cerrar menú móvil al hacer clic en un enlace de navegación
+            document.querySelectorAll('#appSidebar a.sidebar-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        cerrarSidebarMobile();
+                    }
+                });
+            });
         });
 
+        function abrirSidebarMobile() {
+            const sidebar = document.getElementById('appSidebar');
+            const backdrop = document.getElementById('sidebarMobileBackdrop');
+            if (sidebar) {
+                sidebar.classList.remove('-translate-x-full');
+            }
+            if (backdrop) {
+                backdrop.classList.remove('hidden');
+            }
+        }
+
+        function cerrarSidebarMobile() {
+            const sidebar = document.getElementById('appSidebar');
+            const backdrop = document.getElementById('sidebarMobileBackdrop');
+            if (sidebar) {
+                sidebar.classList.add('-translate-x-full');
+            }
+            if (backdrop) {
+                backdrop.classList.add('hidden');
+            }
+        }
+
         function toggleSidebar() {
+            if (window.innerWidth < 1024) {
+                cerrarSidebarMobile();
+                return;
+            }
+
             const sidebar = document.getElementById('appSidebar');
             const icon = document.getElementById('iconoSidebar');
             if (!sidebar) return;
@@ -171,6 +243,9 @@
         }
 
         function abrirModalLogout() {
+            if (window.innerWidth < 1024) {
+                cerrarSidebarMobile();
+            }
             const m = document.getElementById('modalConfirmarLogout');
             if (m) m.classList.remove('hidden');
         }
@@ -179,7 +254,10 @@
             if (m) m.classList.add('hidden');
         }
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') cerrarModalLogout();
+            if (e.key === 'Escape') {
+                cerrarModalLogout();
+                cerrarSidebarMobile();
+            }
         });
     </script>
 
