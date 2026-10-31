@@ -64,8 +64,8 @@
 
                 {{-- Contenedor de Imagen de Altura Fija Amplia y Uniforme (290px) --}}
                 <div class="w-full relative overflow-hidden bg-slate-100 border-b border-slate-100 flex-shrink-0" style="height: 290px; min-height: 290px; max-height: 290px;">
-                    @if($producto->imagen && file_exists(public_path('uploads/productos/' . $producto->imagen)))
-                        <img src="{{ asset('uploads/productos/' . $producto->imagen) }}"
+                    @if($producto->imagen_url)
+                        <img src="{{ $producto->imagen_url }}"
                              alt="{{ $producto->nombre }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                              style="height: 290px; width: 100%; object-fit: cover;">

@@ -76,8 +76,8 @@
 
                 {{-- Contenedor de Imagen de Altura Fija Amplia y Uniforme (290px) --}}
                 <div class="w-full relative overflow-hidden bg-slate-100 border-b border-slate-100 flex-shrink-0" style="height: 290px; min-height: 290px; max-height: 290px;">
-                    @if($producto->imagen && file_exists(public_path('uploads/productos/' . $producto->imagen)))
-                        <img src="{{ asset('uploads/productos/' . $producto->imagen) }}"
+                    @if($producto->imagen_url)
+                        <img src="{{ $producto->imagen_url }}"
                              alt="{{ $producto->nombre }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                              style="height: 290px; width: 100%; object-fit: cover;">
@@ -156,7 +156,16 @@
                     <div class="pt-3 border-t border-slate-100 flex items-center gap-1">
                         {{-- Botón Editar --}}
                         <button type="button"
-                            onclick="abrirModalEditarProd({{ $producto->id_producto }}, '{{ addslashes($producto->nombre) }}', {{ $producto->id_categoria }}, '{{ addslashes($producto->marca ?? '') }}', {{ $producto->stock_actual }}, {{ $producto->stock_minimo }}, {{ $producto->precio_venta }}, '{{ addslashes($producto->descripcion ?? '') }}', '{{ $producto->imagen ? asset('uploads/productos/' . $producto->imagen) : '' }}')"
+                            data-id="{{ $producto->id_producto }}"
+                            data-nombre="{{ $producto->nombre }}"
+                            data-categoria="{{ $producto->id_categoria }}"
+                            data-marca="{{ $producto->marca ?? '' }}"
+                            data-stock="{{ $producto->stock_actual }}"
+                            data-min="{{ $producto->stock_minimo }}"
+                            data-precio="{{ $producto->precio_venta }}"
+                            data-desc="{{ $producto->descripcion ?? '' }}"
+                            data-img="{{ $producto->imagen_url ?? '' }}"
+                            onclick="abrirModalEditarProd(this)"
                             class="flex-1 py-1.5 px-3 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
                             <i class="bi bi-pencil text-slate-400"></i> Editar
                         </button>
@@ -513,7 +522,20 @@
     }
     function cerrarModalCrearProd() { document.getElementById('modalCrearProd').classList.add('hidden'); }
 
-    function abrirModalEditarProd(id, nombre, idCat, marca, stock, min, precio, desc, imgUrl) {
+    function abrirModalEditarProd(btnOrId, nombre, idCat, marca, stock, min, precio, desc, imgUrl) {
+        let id = btnOrId;
+        if (typeof btnOrId === 'object' && btnOrId !== null) {
+            id = btnOrId.getAttribute('data-id');
+            nombre = btnOrId.getAttribute('data-nombre');
+            idCat = btnOrId.getAttribute('data-categoria');
+            marca = btnOrId.getAttribute('data-marca');
+            stock = btnOrId.getAttribute('data-stock');
+            min = btnOrId.getAttribute('data-min');
+            precio = btnOrId.getAttribute('data-precio');
+            desc = btnOrId.getAttribute('data-desc');
+            imgUrl = btnOrId.getAttribute('data-img');
+        }
+
         document.getElementById('formEditarProd').action = `/admin/productos/${id}`;
         document.getElementById('edit_prod_nombre').value = nombre;
         document.getElementById('edit_prod_categoria').value = idCat;

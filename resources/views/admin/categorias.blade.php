@@ -43,9 +43,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="gridCategorias">
         @forelse ($categorias as $categoria)
             @php
-                $catImgUrl = ($categoria->imagen && file_exists(public_path('uploads/categorias/' . $categoria->imagen)))
-                    ? asset('uploads/categorias/' . $categoria->imagen)
-                    : '';
+                $catImgUrl = $categoria->imagen_url ?? '';
             @endphp
             <div class="card-categoria group bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col overflow-hidden"
                  data-nombre="{{ strtolower($categoria->nombre) }}"
@@ -105,7 +103,11 @@
                     <div class="pt-3 border-t border-slate-100 flex items-center gap-1">
                         {{-- Botón Editar --}}
                         <button type="button"
-                            onclick="abrirModalEditarCat({{ $categoria->id_categoria }}, '{{ addslashes($categoria->nombre) }}', '{{ addslashes($categoria->descripcion ?? '') }}', '{{ $catImgUrl }}')"
+                            data-id="{{ $categoria->id_categoria }}"
+                            data-nombre="{{ $categoria->nombre }}"
+                            data-desc="{{ $categoria->descripcion ?? '' }}"
+                            data-img="{{ $catImgUrl }}"
+                            onclick="abrirModalEditarCat(this)"
                             class="flex-1 py-1.5 px-3 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
                             <i class="bi bi-pencil text-slate-400"></i> Editar
                         </button>
@@ -330,7 +332,15 @@
     }
     function cerrarModalCrearCat() { document.getElementById('modalCrearCat').classList.add('hidden'); }
 
-    function abrirModalEditarCat(id, nombre, desc, imgUrl) {
+    function abrirModalEditarCat(btnOrId, nombre, desc, imgUrl) {
+        let id = btnOrId;
+        if (typeof btnOrId === 'object' && btnOrId !== null) {
+            id = btnOrId.getAttribute('data-id');
+            nombre = btnOrId.getAttribute('data-nombre');
+            desc = btnOrId.getAttribute('data-desc');
+            imgUrl = btnOrId.getAttribute('data-img');
+        }
+
         document.getElementById('formEditarCat').action = `/admin/categorias/${id}`;
         document.getElementById('edit_cat_nombre').value = nombre;
         document.getElementById('edit_cat_desc').value = desc;
