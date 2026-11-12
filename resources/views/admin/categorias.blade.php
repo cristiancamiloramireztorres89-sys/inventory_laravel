@@ -154,7 +154,7 @@
             </button>
         </div>
 
-        <form action="{{ route('admin.categorias.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
+        <form id="formCrearCat" action="{{ route('admin.categorias.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return validarEnvioCat('imagen_cat_create', 'error_img_cat_create')" class="space-y-4" autocomplete="off">
             @csrf
 
             <div class="space-y-1.5">
@@ -165,10 +165,14 @@
                         <img id="preview_cat_create_img" class="w-full h-full object-cover hidden" alt="Preview">
                     </div>
                     <div class="flex-1">
-                        <input type="file" name="imagen" id="imagen_cat_create" accept="image/*" onchange="previewCatImage(this, 'preview_cat_create_img', 'preview_cat_create_icon')"
+                        <input type="file" name="imagen" id="imagen_cat_create" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" onchange="previewCatImage(this, 'preview_cat_create_img', 'preview_cat_create_icon', 'error_img_cat_create')"
                             class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
-                        <p class="text-[10px] text-slate-400 mt-1">Formatos: JPG, PNG, WEBP. Máximo 2MB.</p>
+                        <p class="text-[10px] text-slate-400 mt-1">Formatos: JPG, JPEG, PNG, WEBP, GIF. Máximo 2MB.</p>
                     </div>
+                </div>
+                <div id="error_img_cat_create" class="hidden mt-2 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-start gap-2">
+                    <i class="bi bi-exclamation-circle-fill text-red-600 text-sm flex-shrink-0 mt-0.5"></i>
+                    <span class="error-msg"></span>
                 </div>
             </div>
 
@@ -205,7 +209,7 @@
             </button>
         </div>
 
-        <form id="formEditarCat" method="POST" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
+        <form id="formEditarCat" method="POST" enctype="multipart/form-data" onsubmit="return validarEnvioCat('imagen_cat_edit', 'error_img_cat_edit')" class="space-y-4" autocomplete="off">
             @csrf
             @method('PUT')
 
@@ -217,10 +221,14 @@
                         <img id="preview_cat_edit_img" class="w-full h-full object-cover hidden" alt="Preview">
                     </div>
                     <div class="flex-1">
-                        <input type="file" name="imagen" id="imagen_cat_edit" accept="image/*" onchange="previewCatImage(this, 'preview_cat_edit_img', 'preview_cat_edit_icon')"
+                        <input type="file" name="imagen" id="imagen_cat_edit" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" onchange="previewCatImage(this, 'preview_cat_edit_img', 'preview_cat_edit_icon', 'error_img_cat_edit')"
                             class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
-                        <p class="text-[10px] text-slate-400 mt-1">Selecciona una nueva imagen solo si deseas reemplazarla.</p>
+                        <p class="text-[10px] text-slate-400 mt-1">Formatos: JPG, JPEG, PNG, WEBP, GIF (Máximo 2MB). Selecciona una nueva solo si deseas reemplazarla.</p>
                     </div>
+                </div>
+                <div id="error_img_cat_edit" class="hidden mt-2 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-start gap-2">
+                    <i class="bi bi-exclamation-circle-fill text-red-600 text-sm flex-shrink-0 mt-0.5"></i>
+                    <span class="error-msg"></span>
                 </div>
             </div>
 
@@ -309,22 +317,112 @@
         }
     }
 
-    function previewCatImage(input, imgId, iconId) {
+    function mostrarErrorCatImagen(errorId, mensaje) {
+        const box = document.getElementById(errorId);
+        if (!box) return;
+        const span = box.querySelector('.error-msg');
+        if (span) span.textContent = mensaje;
+        box.classList.remove('hidden');
+    }
+
+    function ocultarErrorCatImagen(errorId) {
+        const box = document.getElementById(errorId);
+        if (!box) return;
+        box.classList.add('hidden');
+    }
+
+    function validarEnvioCat(inputId, errorId) {
+        const input = document.getElementById(inputId);
+        if (input && input.dataset.invalid === 'true') {
+            const box = document.getElementById(errorId);
+            if (box) {
+                box.classList.remove('hidden');
+                box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                box.classList.add('ring-2', 'ring-red-400');
+                setTimeout(() => box.classList.remove('ring-2', 'ring-red-400'), 700);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    function previewCatImage(input, imgId, iconId, errorId) {
         const img = document.getElementById(imgId);
         const icon = document.getElementById(iconId);
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
+
+        if (!input.files || !input.files[0]) {
+            return;
+        }
+
+        if (errorId) ocultarErrorCatImagen(errorId);
+
+        const file = input.files[0];
+        const maxBytes = 2 * 1024 * 1024; // 2MB
+        const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
+        const fileName = file.name || '';
+        const ext = fileName.includes('.') ? fileName.split('.').pop().toLowerCase() : '';
+        const mime = (file.type || '').toLowerCase();
+
+        const isExtValid = allowedExts.includes(ext);
+        const isMimeValid = mime ? allowedMimes.includes(mime) : true;
+
+        if (!isExtValid || !isMimeValid) {
+            input.value = '';
+            input.dataset.invalid = 'true';
+            if (errorId) {
+                const extLabel = ext ? `.${ext.toUpperCase()}` : 'seleccionado';
+                mostrarErrorCatImagen(
+                    errorId,
+                    `Archivo ${extLabel} no permitido. Solo se permiten imágenes válidas (JPG, JPEG, PNG, WEBP, GIF). Selecciona una imagen válida para continuar.`
+                );
+            }
+            return;
+        }
+
+        if (file.size > maxBytes) {
+            input.value = '';
+            input.dataset.invalid = 'true';
+            if (errorId) {
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                mostrarErrorCatImagen(
+                    errorId,
+                    `La imagen pesa ${sizeMB} MB y supera el tamaño máximo permitido de 2 MB. Selecciona una imagen válida para continuar.`
+                );
+            }
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const testImg = new Image();
+            testImg.onload = function() {
+                delete input.dataset.invalid;
                 img.src = e.target.result;
                 img.classList.remove('hidden');
                 icon.classList.add('hidden');
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
+            };
+            testImg.onerror = function() {
+                input.value = '';
+                input.dataset.invalid = 'true';
+                if (errorId) {
+                    mostrarErrorCatImagen(
+                        errorId,
+                        'El archivo seleccionado está dañado o no corresponde a una imagen válida. Selecciona una imagen válida para continuar.'
+                    );
+                }
+            };
+            testImg.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
 
     function abrirModalCrearCat() {
-        document.getElementById('imagen_cat_create').value = '';
+        const inputCreate = document.getElementById('imagen_cat_create');
+        inputCreate.value = '';
+        delete inputCreate.dataset.invalid;
+        ocultarErrorCatImagen('error_img_cat_create');
         document.getElementById('preview_cat_create_img').src = '';
         document.getElementById('preview_cat_create_img').classList.add('hidden');
         document.getElementById('preview_cat_create_icon').classList.remove('hidden');
@@ -344,7 +442,10 @@
         document.getElementById('formEditarCat').action = `/admin/categorias/${id}`;
         document.getElementById('edit_cat_nombre').value = nombre;
         document.getElementById('edit_cat_desc').value = desc;
-        document.getElementById('imagen_cat_edit').value = '';
+        const inputEdit = document.getElementById('imagen_cat_edit');
+        inputEdit.value = '';
+        delete inputEdit.dataset.invalid;
+        ocultarErrorCatImagen('error_img_cat_edit');
 
         const editImg = document.getElementById('preview_cat_edit_img');
         const editIcon = document.getElementById('preview_cat_edit_icon');

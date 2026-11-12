@@ -5,7 +5,7 @@
 @endphp
 
 <aside id="appSidebar"
-       class="fixed lg:sticky inset-y-0 left-0 z-50 lg:z-40 w-72 lg:w-64 h-screen h-[100dvh] flex-shrink-0 flex flex-col select-none border-r border-white/[0.08] -translate-x-full lg:translate-x-0 transition-transform lg:transition-[width] duration-300 ease-in-out shadow-2xl lg:shadow-none"
+       class="h-screen h-[100dvh] flex-shrink-0 flex flex-col select-none border-r border-white/[0.08] shadow-2xl lg:shadow-none"
        style="background: #0d1117;">
 
     {{-- 1. Logo Original Pulido con Botón de Colapso Elegante --}}

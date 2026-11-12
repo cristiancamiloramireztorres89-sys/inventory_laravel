@@ -18,10 +18,35 @@
     @endif
 
     <style>
+        /* 1. MÓVIL (< 1024px): Menú lateral tipo Drawer oculto por defecto */
+        @media (max-width: 1023px) {
+            #appSidebar {
+                position: fixed !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                z-index: 50 !important;
+                width: 18rem !important; /* 288px */
+                transform: translateX(-100%) !important;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+            #appSidebar.sidebar-mobile-open {
+                transform: translateX(0) !important;
+            }
+        }
+
+        /* 2. ESCRITORIO (>= 1024px): Menú fijo en el flujo normal, NUNCA se superpone */
         @media (min-width: 1024px) {
             #appSidebar {
-                transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-                width: 16rem;
+                position: sticky !important;
+                top: 0 !important;
+                left: auto !important;
+                bottom: auto !important;
+                transform: none !important;
+                z-index: 40 !important;
+                width: 16rem !important;
+                flex-shrink: 0 !important;
+                transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
             }
             #appSidebar.sidebar-collapsed {
                 width: 4.75rem !important; /* 76px */
@@ -202,6 +227,7 @@
             const sidebar = document.getElementById('appSidebar');
             const backdrop = document.getElementById('sidebarMobileBackdrop');
             if (sidebar) {
+                sidebar.classList.add('sidebar-mobile-open');
                 sidebar.classList.remove('-translate-x-full');
             }
             if (backdrop) {
@@ -213,6 +239,7 @@
             const sidebar = document.getElementById('appSidebar');
             const backdrop = document.getElementById('sidebarMobileBackdrop');
             if (sidebar) {
+                sidebar.classList.remove('sidebar-mobile-open');
                 sidebar.classList.add('-translate-x-full');
             }
             if (backdrop) {

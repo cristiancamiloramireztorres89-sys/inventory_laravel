@@ -25,6 +25,9 @@ RUN apt-get update && apt-get install -y \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
+# Configuración de límites PHP (evitar que uploads grandes tiren Warning fatal de Content-Length en Apache)
+RUN printf "upload_max_filesize = 30M\npost_max_size = 35M\nmemory_limit = 256M\n" > /usr/local/etc/php/conf.d/uploads.ini
+
 # Instalar Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
