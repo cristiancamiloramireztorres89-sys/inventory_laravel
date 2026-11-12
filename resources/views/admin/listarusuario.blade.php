@@ -202,7 +202,7 @@
             </button>
         </div>
 
-        <form action="{{ route('admin.usuarios.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
+        <form id="formCrearUsuario" action="{{ route('admin.usuarios.store') }}" method="POST" enctype="multipart/form-data" onsubmit="return validarEnvioUsuario('create_foto', 'error_img_user_create')" class="space-y-4" autocomplete="off">
             @csrf
 
             <div class="space-y-1.5">
@@ -213,9 +213,14 @@
                         <img id="create_avatar_img" class="w-full h-full object-cover hidden" alt="Avatar Preview">
                     </div>
                     <div class="flex-1">
-                        <input type="file" name="foto" id="create_foto" accept="image/*" onchange="previewUserAvatar(this, 'create_avatar_img', 'create_avatar_icon')"
+                        <input type="file" name="foto" id="create_foto" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" onchange="previewUserAvatar(this, 'create_avatar_img', 'create_avatar_icon', 'error_img_user_create')"
                             class="w-full text-xs text-slate-500 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
+                        <p class="text-[10px] text-slate-400 mt-0.5">Formatos: JPG, JPEG, PNG, WEBP, GIF. Máximo 2MB.</p>
                     </div>
+                </div>
+                <div id="error_img_user_create" class="hidden mt-2 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-start gap-2">
+                    <i class="bi bi-exclamation-circle-fill text-red-600 text-sm flex-shrink-0 mt-0.5"></i>
+                    <span class="error-msg"></span>
                 </div>
             </div>
 
@@ -284,7 +289,7 @@
             </button>
         </div>
 
-        <form id="formEditar" method="POST" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
+        <form id="formEditar" method="POST" enctype="multipart/form-data" onsubmit="return validarEnvioUsuario('edit_foto', 'error_img_user_edit')" class="space-y-4" autocomplete="off">
             @csrf
             @method('PUT')
 
@@ -296,10 +301,14 @@
                         <img id="edit_avatar_img" class="w-full h-full object-cover hidden" alt="Avatar Preview">
                     </div>
                     <div class="flex-1">
-                        <input type="file" name="foto" id="edit_foto" accept="image/*" onchange="previewUserAvatar(this, 'edit_avatar_img', 'edit_avatar_icon')"
+                        <input type="file" name="foto" id="edit_foto" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" onchange="previewUserAvatar(this, 'edit_avatar_img', 'edit_avatar_icon', 'error_img_user_edit')"
                             class="w-full text-xs text-slate-500 file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
-                        <p class="text-[10px] text-slate-400 mt-0.5">Selecciona una imagen solo si deseas cambiarla.</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Formatos: JPG, JPEG, PNG, WEBP, GIF (Máx. 2MB). Selecciona una imagen solo si deseas cambiarla.</p>
                     </div>
+                </div>
+                <div id="error_img_user_edit" class="hidden mt-2 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-start gap-2">
+                    <i class="bi bi-exclamation-circle-fill text-red-600 text-sm flex-shrink-0 mt-0.5"></i>
+                    <span class="error-msg"></span>
                 </div>
             </div>
 
@@ -429,18 +438,105 @@
         });
     }
 
-    function previewUserAvatar(input, imgId, iconId) {
+    function mostrarErrorUserAvatar(errorId, mensaje) {
+        const box = document.getElementById(errorId);
+        if (!box) return;
+        const span = box.querySelector('.error-msg');
+        if (span) span.textContent = mensaje;
+        box.classList.remove('hidden');
+    }
+
+    function ocultarErrorUserAvatar(errorId) {
+        const box = document.getElementById(errorId);
+        if (!box) return;
+        box.classList.add('hidden');
+    }
+
+    function validarEnvioUsuario(inputId, errorId) {
+        const input = document.getElementById(inputId);
+        if (input && input.dataset.invalid === 'true') {
+            const box = document.getElementById(errorId);
+            if (box) {
+                box.classList.remove('hidden');
+                box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                box.classList.add('ring-2', 'ring-red-400');
+                setTimeout(() => box.classList.remove('ring-2', 'ring-red-400'), 700);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    function previewUserAvatar(input, imgId, iconId, errorId) {
         const img = document.getElementById(imgId);
         const icon = document.getElementById(iconId);
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
+
+        if (!input.files || !input.files[0]) {
+            return;
+        }
+
+        if (errorId) ocultarErrorUserAvatar(errorId);
+
+        const file = input.files[0];
+        const maxBytes = 2 * 1024 * 1024; // 2MB
+        const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
+        const fileName = file.name || '';
+        const ext = fileName.includes('.') ? fileName.split('.').pop().toLowerCase() : '';
+        const mime = (file.type || '').toLowerCase();
+
+        const isExtValid = allowedExts.includes(ext);
+        const isMimeValid = mime ? allowedMimes.includes(mime) : true;
+
+        if (!isExtValid || !isMimeValid) {
+            input.value = '';
+            input.dataset.invalid = 'true';
+            if (errorId) {
+                const extLabel = ext ? `.${ext.toUpperCase()}` : 'seleccionado';
+                mostrarErrorUserAvatar(
+                    errorId,
+                    `Archivo ${extLabel} no permitido. Solo se permiten imágenes válidas (JPG, JPEG, PNG, WEBP, GIF). Selecciona una imagen válida para continuar.`
+                );
+            }
+            return;
+        }
+
+        if (file.size > maxBytes) {
+            input.value = '';
+            input.dataset.invalid = 'true';
+            if (errorId) {
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                mostrarErrorUserAvatar(
+                    errorId,
+                    `La imagen pesa ${sizeMB} MB y supera el tamaño máximo permitido de 2 MB. Selecciona una imagen válida para continuar.`
+                );
+            }
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const testImg = new Image();
+            testImg.onload = function() {
+                delete input.dataset.invalid;
                 img.src = e.target.result;
                 img.classList.remove('hidden');
                 icon.classList.add('hidden');
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
+            };
+            testImg.onerror = function() {
+                input.value = '';
+                input.dataset.invalid = 'true';
+                if (errorId) {
+                    mostrarErrorUserAvatar(
+                        errorId,
+                        'El archivo seleccionado está dañado o no corresponde a una imagen válida. Selecciona una imagen válida para continuar.'
+                    );
+                }
+            };
+            testImg.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
 
     // Modal Crear
@@ -462,7 +558,11 @@
             pass.type = 'password';
         }
         if (eye) eye.className = 'bi bi-eye text-sm';
-        if (foto) foto.value = '';
+        if (foto) {
+            foto.value = '';
+            delete foto.dataset.invalid;
+        }
+        ocultarErrorUserAvatar('error_img_user_create');
         if (avatarImg) {
             avatarImg.src = '';
             avatarImg.classList.add('hidden');
@@ -494,7 +594,11 @@
         document.getElementById('edit_contrasena').value = '';
 
         const editFoto = document.getElementById('edit_foto');
-        if (editFoto) editFoto.value = '';
+        if (editFoto) {
+            editFoto.value = '';
+            delete editFoto.dataset.invalid;
+        }
+        ocultarErrorUserAvatar('error_img_user_edit');
 
         const editImg = document.getElementById('edit_avatar_img');
         const editIcon = document.getElementById('edit_avatar_icon');

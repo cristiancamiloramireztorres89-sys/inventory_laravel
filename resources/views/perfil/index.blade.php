@@ -140,10 +140,14 @@
                             <input type="file"
                                    name="foto"
                                    id="input_foto_perfil"
-                                   accept="image/*"
+                                   accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif"
                                    onchange="handleAvatarFileSelect(this)"
                                    class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
-                            <span class="text-[11px] text-slate-400 flex-shrink-0">JPG, PNG, WEBP. Máx. 2MB.</span>
+                            <span class="text-[11px] text-slate-400 flex-shrink-0">JPG, JPEG, PNG, WEBP, GIF. Máx. 2MB.</span>
+                        </div>
+                        <div id="error_img_perfil" class="hidden mt-2 p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-start gap-2">
+                            <i class="bi bi-exclamation-circle-fill text-red-600 text-sm flex-shrink-0 mt-0.5"></i>
+                            <span class="error-msg"></span>
                         </div>
                     </div>
 
@@ -320,7 +324,33 @@
 </div>
 
 <script>
+    function mostrarErrorPerfilFoto(mensaje) {
+        const box = document.getElementById('error_img_perfil');
+        if (!box) return;
+        const span = box.querySelector('.error-msg');
+        if (span) span.textContent = mensaje;
+        box.classList.remove('hidden');
+    }
+
+    function ocultarErrorPerfilFoto() {
+        const box = document.getElementById('error_img_perfil');
+        if (!box) return;
+        box.classList.add('hidden');
+    }
+
     function abrirModalConfirmarPerfil() {
+        const inputFoto = document.getElementById('input_foto_perfil');
+        if (inputFoto && inputFoto.dataset.invalid === 'true') {
+            const box = document.getElementById('error_img_perfil');
+            if (box) {
+                box.classList.remove('hidden');
+                box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                box.classList.add('ring-2', 'ring-red-400');
+                setTimeout(() => box.classList.remove('ring-2', 'ring-red-400'), 700);
+            }
+            return;
+        }
+
         const form = document.getElementById('formPerfil');
         if (!form.checkValidity()) {
             form.reportValidity();
@@ -338,9 +368,49 @@
     }
 
     function handleAvatarFileSelect(input) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
+        if (!input.files || !input.files[0]) {
+            return;
+        }
+
+        ocultarErrorPerfilFoto();
+
+        const file = input.files[0];
+        const maxBytes = 2 * 1024 * 1024; // 2MB
+        const allowedExts = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        const allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
+        const fileName = file.name || '';
+        const ext = fileName.includes('.') ? fileName.split('.').pop().toLowerCase() : '';
+        const mime = (file.type || '').toLowerCase();
+
+        const isExtValid = allowedExts.includes(ext);
+        const isMimeValid = mime ? allowedMimes.includes(mime) : true;
+
+        if (!isExtValid || !isMimeValid) {
+            input.value = '';
+            input.dataset.invalid = 'true';
+            const extLabel = ext ? `.${ext.toUpperCase()}` : 'seleccionado';
+            mostrarErrorPerfilFoto(
+                `Archivo ${extLabel} no permitido. Solo se permiten imágenes válidas (JPG, JPEG, PNG, WEBP, GIF). Selecciona una imagen válida para continuar.`
+            );
+            return;
+        }
+
+        if (file.size > maxBytes) {
+            input.value = '';
+            input.dataset.invalid = 'true';
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+            mostrarErrorPerfilFoto(
+                `La imagen pesa ${sizeMB} MB y supera el tamaño máximo permitido de 2 MB. Selecciona una imagen válida para continuar.`
+            );
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const testImg = new Image();
+            testImg.onload = function() {
+                delete input.dataset.invalid;
                 const img = document.getElementById('avatar_img_preview');
                 const initial = document.getElementById('avatar_initial_preview');
                 
@@ -350,8 +420,16 @@
                     initial.classList.add('hidden');
                 }
             };
-            reader.readAsDataURL(input.files[0]);
-        }
+            testImg.onerror = function() {
+                input.value = '';
+                input.dataset.invalid = 'true';
+                mostrarErrorPerfilFoto(
+                    'El archivo seleccionado está dañado o no corresponde a una imagen válida. Selecciona una imagen válida para continuar.'
+                );
+            };
+            testImg.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
     }
 
     function togglePasswordVisibility(fieldId, btn) {
